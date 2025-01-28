@@ -4,11 +4,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<MyDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("cs") 
-        ?? throw new InvalidOperationException("Couldn't find connection string!"));
-});
+var ConnectionString = builder.Configuration.GetConnectionString("cs")
+        ?? throw new InvalidOperationException("Couldn't find connection string!");
+
+builder.Services.AddDbContext<MyDbContext>(options => options.UseSqlServer(ConnectionString));
 
 var app = builder.Build();
 
