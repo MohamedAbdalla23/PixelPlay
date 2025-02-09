@@ -37,6 +37,58 @@ namespace PixelPlay.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Action"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Adventure"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Arcade"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Horror"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Fighting"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Story"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Shooting"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Sport"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Survival"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Drama"
+                        });
                 });
 
             modelBuilder.Entity("PixelPlay.Models.Devices", b =>
@@ -60,6 +112,32 @@ namespace PixelPlay.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Devices");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Icon = "bi bi-playstation",
+                            Name = "Playstation"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Icon = "bi bi-xbox",
+                            Name = "Xbox"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Icon = "bi bi-pc-display",
+                            Name = "PC"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Icon = "bi bi-nintendo-switch",
+                            Name = "Nintendo Switch"
+                        });
                 });
 
             modelBuilder.Entity("PixelPlay.Models.GameCategories", b =>

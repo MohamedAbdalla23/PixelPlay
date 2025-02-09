@@ -2,10 +2,12 @@
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace PixelPlay.Migrations
 {
     /// <inheritdoc />
-    public partial class InitMigration : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -98,6 +100,34 @@ namespace PixelPlay.Migrations
                         principalTable: "Games",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: ["Id", "Name"],
+                values: new object[,]
+                {
+                    { 1, "Action" },
+                    { 2, "Adventure" },
+                    { 3, "Arcade" },
+                    { 4, "Horror" },
+                    { 5, "Fighting" },
+                    { 6, "Story" },
+                    { 7, "Shooting" },
+                    { 8, "Sport" },
+                    { 9, "Survival" },
+                    { 10, "Drama" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Devices",
+                columns: ["Id", "Icon", "Name"],
+                values: new object[,]
+                {
+                    { 1, "bi bi-playstation", "Playstation" },
+                    { 2, "bi bi-xbox", "Xbox" },
+                    { 3, "bi bi-pc-display", "PC" },
+                    { 4, "bi bi-nintendo-switch", "Nintendo Switch" }
                 });
 
             migrationBuilder.CreateIndex(
