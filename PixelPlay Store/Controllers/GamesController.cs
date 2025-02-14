@@ -4,21 +4,25 @@ namespace PixelPlay.Controllers
 {
     public class GamesController : Controller
     {
-        public GamesController() 
+        private readonly IGameRepo gamesrepo;
+        public GamesController(IGameRepo gameRepo) 
         {
-
+            gamesrepo = gameRepo;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            return View("Index");
+            var games = gamesrepo.GetAll();
+            return View("Index", games);
         }
         [HttpGet]
         public IActionResult Details(int id)
         {
-            return View("Details", id);
+            Games games = gamesrepo.GetById(id);
+            return View("Details", games);
         }
+
 
         [HttpGet]
         public IActionResult Create()
@@ -28,19 +32,26 @@ namespace PixelPlay.Controllers
         [HttpPost]
         public IActionResult Create(Games games)
         {
+            gamesrepo.Create(games);
+            gamesrepo.Save();
             return RedirectToAction();
         }
 
+
         [HttpGet]
-        public IActionResult Update()
+        public IActionResult Update(int id)
         {
-            return View("Update");
+            Games games = gamesrepo.GetById(id);
+            return View("Update", games);
         }
         [HttpPost]
         public IActionResult Update(Games games)
         {
-            return RedirectToAction();
+            gamesrepo.Update(games);
+            gamesrepo.Save();
+            return RedirectToAction("Details");
         }
+
 
         [HttpGet]
         public IActionResult Delete()
@@ -48,8 +59,10 @@ namespace PixelPlay.Controllers
             return View("Delete");
         }
         [HttpPost]
-        public IActionResult Delete(Games games)
+        public IActionResult Delete(int id)
         {
+            gamesrepo.Delete(id);
+            gamesrepo.Save();
             return RedirectToAction();
         }
 

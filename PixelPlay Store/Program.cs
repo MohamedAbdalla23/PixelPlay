@@ -9,6 +9,8 @@ var ConnectionString = builder.Configuration.GetConnectionString("cs")
 
 builder.Services.AddDbContext<MyDbContext>(options => options.UseSqlServer(ConnectionString));
 
+builder.Services.AddScoped<IGameRepo, GamesRepo>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
