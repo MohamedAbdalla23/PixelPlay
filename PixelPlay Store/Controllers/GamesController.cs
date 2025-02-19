@@ -1,13 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PixelPlay.Repositories.ReposInterface;
 
 namespace PixelPlay.Controllers
 {
     public class GamesController : Controller
     {
         private readonly IGameRepo gamesrepo;
-        public GamesController(IGameRepo gameRepo) 
+        private readonly IGameForm gameformrepo;
+        public GamesController(IGameRepo gameRepo, IGameForm gameForm) 
         {
             gamesrepo = gameRepo;
+            gameformrepo = gameForm;
         }
 
         [HttpGet]
@@ -27,7 +30,12 @@ namespace PixelPlay.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View("Create");
+            GameFormViewModel Viewmodel = new()
+            {
+                Categories = gameformrepo.GetCategoriesData(),
+                Devices = gameformrepo.GetDevicesData()
+            };
+            return View(Viewmodel);
         }
         [HttpPost]
         public IActionResult Create(Games games)

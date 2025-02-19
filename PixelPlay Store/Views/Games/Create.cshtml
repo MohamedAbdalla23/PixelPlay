@@ -1,13 +1,56 @@
-﻿@model Games
+﻿@model GameFormViewModel
 @{
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
 
-<h4>Games</h4>
+<h4>
+    <i class="bi bi-plus-circle-dotted"></i>
+    Add new Game
+</h4>
 <hr />
-<div class="row">
+
+<form asp-controller="Games" asp-action="Create">
+    <div class="row">
+        <div class="col-md-6">
+            <div>
+                <label asp-for="Name" class="form-label mt-4"></label>
+                <input type="text" class="form-control" asp-for="Name" placeholder="Enter Name">
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="GameDevices" class="form-label mt-4"></label>
+                <select class="form-select" asp-for="GameDevices" asp-items="Model.Devices">
+                    <option>Please Select Devices</option>
+                </select>
+                <span asp-validation-for="GameDevices" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="GameCategories" class="form-label mt-4"></label>
+                <select class="form-select" asp-for="GameCategories" asp-items="Model.Categories">
+                    <option>Please Select Categories</option>
+                </select>
+                <span asp-validation-for="GameDevices" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Description" class="form-label mt-4"></label>
+                <textarea asp-for="Description" class="form-control" placeholder="Enter Description"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Cover" class="form-label mt-4"></label>
+                <input type="file" class="form-control" asp-for="Cover">
+                <small id="emailHelp" class="form-text text-muted">Only .JPG, .JPEG, .PNG files are allowed with max 5MB.</small>
+                <span asp-validation-for="Cover" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-secondary mt-4">Submit</button>
+        </div>
+        <div class="col-md-6">
+
+        </div>
+    </div>
+</form>
+@* <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -31,7 +74,7 @@
             </div>
         </form>
     </div>
-</div>
+</div> *@
 
 <div>
     <a asp-action="Index">Back to List</a>

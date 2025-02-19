@@ -1,4 +1,6 @@
 
+using PixelPlay.Repositories.ReposInterface;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -10,6 +12,7 @@ var ConnectionString = builder.Configuration.GetConnectionString("cs")
 builder.Services.AddDbContext<MyDbContext>(options => options.UseSqlServer(ConnectionString));
 
 builder.Services.AddScoped<IGameRepo, GamesRepo>();
+builder.Services.AddScoped<IGameForm, GameForm>();
 
 var app = builder.Build();
 
