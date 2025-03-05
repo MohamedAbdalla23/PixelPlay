@@ -43,18 +43,14 @@ namespace PixelPlay.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(GameFormViewModel model)
+        public async Task<IActionResult> Create(GameFormViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-            //Games games = new();
-            //games.Name = model.Name;
-            //games.Description = model.Description;
-            //games.GameCategories = model.GameCategories;
-            //gamesrepo.Create(games);
-            //gamesrepo.Save();
+            await gamesrepo.Create(model);
+            await gamesrepo.Save();
             return RedirectToAction(nameof(Index));
         }
 

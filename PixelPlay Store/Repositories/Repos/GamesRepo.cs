@@ -1,4 +1,6 @@
 ﻿
+using System.Threading.Tasks;
+
 namespace PixelPlay.Repositories.Repos
 {
     public class GamesRepo : IGameRepo
@@ -13,10 +15,21 @@ namespace PixelPlay.Repositories.Repos
             imagepath = $"{webhostenvironment.WebRootPath}/assets/images";
         }
 
-        public void Create(GameFormViewModel game)
+        public async Task Create(GameFormViewModel model)
         {
-            var covername = $"{Guid.NewGuid()}{Path.GetExtension(game.Cover.FileName)}";
+            var covername = $"{Guid.NewGuid()}{Path.GetExtension(model.Cover.FileName)}";
             var path = Path.Combine(imagepath, covername);
+            using var stream = File.Create(path);
+            await model.Cover.CopyToAsync(stream);
+            stream.Dispose();
+            Games game = new()
+            {
+                Name = model.Name,
+                Description = model.Description,
+                Cover = covername,
+                GameCategories = model.GameCategories.Select(c => new GameCategories { CategoryId = c }).ToList(),
+                GameDevices = model.GameDevices.Select(d => new GameDevices { DeviceId = d }).ToList()
+            };
             context.Games.Add(game);            
         }
 
@@ -41,9 +54,9 @@ namespace PixelPlay.Repositories.Repos
             return context.Games.FirstOrDefault(x => x.Id == id);                 
         }
 
-        public void Save()
+        public async Task Save()
         {
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
         public void Update(Games games)
