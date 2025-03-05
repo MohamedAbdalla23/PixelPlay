@@ -13,6 +13,8 @@ builder.Services.AddDbContext<MyDbContext>(options => options.UseSqlServer(Conne
 
 builder.Services.AddScoped<IGameRepo, GamesRepo>();
 builder.Services.AddScoped<IGameForm, GameForm>();
+builder.Services.AddScoped<ICategoriesRepo, CategoriesRepo>();
+builder.Services.AddScoped<IDevicesRepo, DevicesRepo>();
 
 var app = builder.Build();
 

@@ -10,7 +10,7 @@
 </h4>
 <hr />
 
-<form asp-controller="Games" asp-action="Create">
+<form asp-controller="Games" asp-action="Create" enctype="multipart/form-data">
     <div class="row">
         <div class="col-md-6">
             <div>
@@ -41,7 +41,7 @@
                 <label asp-for="Cover" class="form-label mt-4"></label>
                 <input type="file" class="form-control" asp-for="Cover">
                 <small id="emailHelp" class="form-text text-muted">Only .JPG, .JPEG, .PNG files are allowed with max 5MB.</small>
-                <span asp-validation-for="Cover" class="text-danger"></span>
+                <span asp-validation-for="Cover" class="text-danger d-block"></span>
             </div>
             <button type="submit" class="btn btn-secondary mt-4">Submit</button>
         </div>

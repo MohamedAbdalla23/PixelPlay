@@ -7,10 +7,14 @@ namespace PixelPlay.Controllers
     {
         private readonly IGameRepo gamesrepo;
         private readonly IGameForm gameformrepo;
-        public GamesController(IGameRepo gameRepo, IGameForm gameForm) 
+        private readonly ICategoriesRepo categoriesrepo;
+        private readonly IDevicesRepo devicesrepo;
+        public GamesController(IGameRepo gameRepo, IGameForm gameForm, ICategoriesRepo categoriesRepo, IDevicesRepo devicesRepo) 
         {
             gamesrepo = gameRepo;
             gameformrepo = gameForm;
+            categoriesrepo = categoriesRepo;
+            devicesrepo = devicesRepo;
         }
 
         [HttpGet]
@@ -32,17 +36,26 @@ namespace PixelPlay.Controllers
         {
             GameFormViewModel Viewmodel = new()
             {
-                Categories = gameformrepo.GetCategoriesData(),
-                Devices = gameformrepo.GetDevicesData()
+                Categories = categoriesrepo.GetCategoriesData(),
+                Devices = devicesrepo.GetDevicesData()
             };
             return View(Viewmodel);
         }
         [HttpPost]
-        public IActionResult Create(Games games)
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(GameFormViewModel model)
         {
-            gamesrepo.Create(games);
-            gamesrepo.Save();
-            return RedirectToAction();
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            //Games games = new();
+            //games.Name = model.Name;
+            //games.Description = model.Description;
+            //games.GameCategories = model.GameCategories;
+            //gamesrepo.Create(games);
+            //gamesrepo.Save();
+            return RedirectToAction(nameof(Index));
         }
 
 

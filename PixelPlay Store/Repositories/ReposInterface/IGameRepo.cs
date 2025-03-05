@@ -4,7 +4,7 @@
 
     public Games GetById(int id);
 
-    public void Create(Games games);
+    public void Create(GameFormViewModel game);
 
     public void Delete(int id);
 

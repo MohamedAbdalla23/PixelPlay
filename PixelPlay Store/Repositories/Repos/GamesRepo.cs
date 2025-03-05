@@ -4,17 +4,19 @@ namespace PixelPlay.Repositories.Repos
     public class GamesRepo : IGameRepo
     {
         private readonly MyDbContext context;
-        public GamesRepo(MyDbContext myDbContext)
+        private readonly IWebHostEnvironment webhostenvironment;
+        private readonly string imagepath;
+        public GamesRepo(MyDbContext myDbContext, IWebHostEnvironment webHostenvironment)
         {
             context = myDbContext;
+            webhostenvironment = webHostenvironment;
+            imagepath = $"{webhostenvironment.WebRootPath}/assets/images";
         }
 
-        public void Create(Games game)
+        public void Create(GameFormViewModel game)
         {
-            if (game == null)
-            {
-                throw new ArgumentNullException(nameof(game), "Game cannot be null.");
-            }
+            var covername = $"{Guid.NewGuid()}{Path.GetExtension(game.Cover.FileName)}";
+            var path = Path.Combine(imagepath, covername);
             context.Games.Add(game);            
         }
 

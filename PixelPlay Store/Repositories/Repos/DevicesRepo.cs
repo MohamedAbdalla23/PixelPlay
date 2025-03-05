@@ -2,24 +2,15 @@
 
 namespace PixelPlay.Repositories.Repos
 {
-    public class GameForm : IGameForm
+    public class DevicesRepo : IDevicesRepo
     {
         private readonly MyDbContext context;
-        public GameForm(MyDbContext myDbContext)
+        public DevicesRepo(MyDbContext myDbContext)
         {
             context = myDbContext;
         }
 
-        public List<SelectListItem> GetCategoriesData()
-        {
-            return context.Categories
-                .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
-                .OrderBy(c => c.Text)
-                .AsNoTracking()
-                .ToList();
-        }
-
-        public List<SelectListItem> GetDevicesData()
+        public IEnumerable<SelectListItem> GetDevicesData()
         {
             return context.Devices
                 .Select(d => new SelectListItem { Value = d.Id.ToString(), Text = d.Name })
