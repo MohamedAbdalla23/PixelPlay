@@ -8,6 +8,8 @@
         [MaxLength(2500)]
         public string Description { get; set; } = string.Empty;
 
+        [AllowedExtensions(FileSettings.AllowedExtensions),
+            MaxFileSize(FileSettings.MaxImageSizeinBytes)]
         public IFormFile Cover { get; set; } = default!;
 
         [Display(Name = "Game Devices")]

@@ -1,6 +1,4 @@
 ﻿
-using System.Threading.Tasks;
-
 namespace PixelPlay.Repositories.Repos
 {
     public class GamesRepo : IGameRepo
@@ -12,7 +10,7 @@ namespace PixelPlay.Repositories.Repos
         {
             context = myDbContext;
             webhostenvironment = webHostenvironment;
-            imagepath = $"{webhostenvironment.WebRootPath}/assets/images";
+            imagepath = $"{webhostenvironment.WebRootPath}{FileSettings.ImagesPath}";
         }
 
         public async Task Create(GameFormViewModel model)
@@ -21,7 +19,7 @@ namespace PixelPlay.Repositories.Repos
             var path = Path.Combine(imagepath, covername);
             using var stream = File.Create(path);
             await model.Cover.CopyToAsync(stream);
-            stream.Dispose();
+
             Games game = new()
             {
                 Name = model.Name,
