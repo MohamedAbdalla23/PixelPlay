@@ -39,7 +39,11 @@
             </div>
             <div>
                 <label asp-for="Cover" class="form-label mt-4"></label>
-                <input type="file" class="form-control" asp-for="Cover">
+                <input type="file" class="form-control" asp-for="Cover"
+                    data-rule-extension="@FileSettings.AllowedExtensions.Replace(".",string.Empty)"
+                    data-msg-extension="Not Allowed Extension"
+                    data-rule-filesize="@FileSettings.MaxImageSizeinBytes"
+                    data-msg-filesize="Maximum Allowed size is @FileSettings.MaxImageSizeinMB MB"/>
                 <small id="emailHelp" class="form-text text-muted">Only @FileSettings.AllowedExtensions files are allowed with max @FileSettings.MaxImageSizeinMB MB.</small>
                 <span asp-validation-for="Cover" class="text-danger d-block"></span>
             </div>
@@ -50,31 +54,7 @@
         </div>
     </div>
 </form>
-@* <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Cover" class="control-label"></label>
-                <input asp-for="Cover" class="form-control" />
-                <span asp-validation-for="Cover" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div> *@
+
 
 <div>
     <a asp-action="Index">Back to List</a>
@@ -82,4 +62,9 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script> 
+        $.validator.addMethod("filesize",function(value,element,param){
+            return this.optional(element) || element.files[0].size <= param;
+        });
+    </script>
 }

@@ -48,7 +48,8 @@ namespace PixelPlay.Controllers
             if (!ModelState.IsValid)
             {
                 return View(model);
-            }
+            } //the drop down list don't show when submit an invalid game *****
+                //fix the drop down list style *****
             await gamesrepo.Create(model);
             await gamesrepo.Save();
             return RedirectToAction(nameof(Index));
