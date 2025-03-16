@@ -36,3 +36,19 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+
+/*Start of the custom style*/
+
+.cover-preview {
+    max-height: 400px;
+    max-width:350px;
+    border-radius: 15px;
+}
+
+.cover-section {
+    border-left: 1px solid;   
+    margin-top:30px;    
+    height: 550px;
+}
+/*End of the custom style*/
