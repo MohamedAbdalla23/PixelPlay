@@ -1,4 +1,18 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿$(document).ready(function () {
+    $('select').select2();
+});
 
-// Write your JavaScript code.
+
+document.addEventListener("DOMContentLoaded", function () {
+    const listItems = document.querySelectorAll("ul li");
+
+    listItems.forEach(item => {
+        item.addEventListener("click", function () {
+            // Remove 'selected' class from all items
+            listItems.forEach(li => li.classList.remove(".select2-results__option[aria-selected]"));
+
+            // Add 'selected' class to the clicked item
+            this.classList.add("selected");
+        });
+    });
+});
