@@ -10,6 +10,14 @@
 </h4>
 <hr />
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-dismissible alert-success mt-5">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <p><strong>Well done!</strong> Game created successfully!</p>
+    </div> 
+}
+
 <form asp-controller="Games" asp-action="Create" enctype="multipart/form-data">
     <div class="row">
         <div class="col-md-7" style="padding-right: 100px;">
