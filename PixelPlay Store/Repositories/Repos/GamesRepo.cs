@@ -41,15 +41,14 @@ namespace PixelPlay.Repositories.Repos
             context.Remove(game);             
         }
 
-        public IEnumerable<Games> GetAll()
+        public IQueryable<Games> GetAll()
         {
             return context.Games
                 .Include(g => g.GameDevices)
                 .ThenInclude(d => d.Device)
                 .Include(g => g.GameCategories)
                 .ThenInclude(d => d.Category)
-                .AsNoTracking()
-                .ToList() ??
+                .AsNoTracking()                 ??
                 throw new InvalidOperationException("There was no Games to be found!");
         }
 

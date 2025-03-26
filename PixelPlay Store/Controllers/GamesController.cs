@@ -18,10 +18,29 @@ namespace PixelPlay.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index(
+            string sortOrder,
+            string currentFilter,
+            string searchString,
+            int? pageNumber)
         {
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            
+            int pageSize = 3;
             var games = gamesrepo.GetAll();
-            return View("Index", games);
+            var paginatedGames = await PaginatedList<Games>.CreateAsync(games, pageNumber ?? 1, pageSize);
+            return View(paginatedGames);
         }
         [HttpGet]
         public IActionResult Details(int id)

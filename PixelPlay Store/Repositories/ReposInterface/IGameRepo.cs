@@ -1,6 +1,6 @@
 ﻿public interface IGameRepo
 {
-    public IEnumerable<Games> GetAll();
+    public IQueryable<Games> GetAll();
 
     public Games GetById(int id);
 
