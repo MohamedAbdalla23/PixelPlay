@@ -45,7 +45,11 @@ namespace PixelPlay.Controllers
         [HttpGet]
         public IActionResult Details(int id)
         {
-            Games games = gamesrepo.GetById(id);
+            var games = gamesrepo.GetById(id);
+            if (games is null)
+            {
+                return NotFound();
+            }
             return View("Details", games);
         }
 

@@ -19,7 +19,7 @@
     @foreach (var item in Model)
     {
         <div class="col-lg-4 col-md-6">
-            <div class="card border-primary mb-3" style="max-width: 20rem;">
+            <a class="card border-primary mb-3 text-decoration-none" style="max-width: 20rem;" asp-controller="Games" asp-action="Details" asp-route-id="@item.Id">
                 <div class="card-header">@item.Name</div>
                 <div class="card-body" style="background-image:url(@($"{@FileSettings.ImagesPath}/{@item.Cover}")); background-size:cover; background-position:center; height:400px">
                     @* <h4 class="card-title">Primary card title</h4>
@@ -40,7 +40,7 @@
                         }
                     </div>
                 </div>
-            </div>            
+            </a>            
 
         </div>
         

@@ -54,7 +54,13 @@ namespace PixelPlay.Repositories.Repos
 
         public Games GetById(int id)
         {
-            return context.Games.FirstOrDefault(x => x.Id == id);                 
+            return context.Games
+                .Include(g => g.GameDevices)
+                .ThenInclude(d => d.Device)
+                .Include(g => g.GameCategories)
+                .ThenInclude(d => d.Category)
+                .AsNoTracking()
+                .FirstOrDefault(x => x.Id == id)!;                 
         }
 
         public async Task Save()
