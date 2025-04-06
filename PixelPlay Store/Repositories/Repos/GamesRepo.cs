@@ -1,24 +1,25 @@
 ﻿
+using PixelPlay.Repositories.ReposInterface;
+
 namespace PixelPlay.Repositories.Repos
 {
     public class GamesRepo : IGameRepo
     {
         private readonly MyDbContext context;
+        private readonly IGameForm gameformrepo;
         private readonly IWebHostEnvironment webhostenvironment;
         private readonly string imagepath;
-        public GamesRepo(MyDbContext myDbContext, IWebHostEnvironment webHostenvironment)
+        public GamesRepo(MyDbContext myDbContext, IGameForm gameForm, IWebHostEnvironment webHostenvironment)
         {
             context = myDbContext;
+            gameformrepo = gameForm;
             webhostenvironment = webHostenvironment;
             imagepath = $"{webhostenvironment.WebRootPath}{FileSettings.ImagesPath}";
         }
 
-        public async Task Create(GameFormViewModel model)
+        public async Task Create(CreateGameFormViewModel model)
         {
-            var covername = $"{Guid.NewGuid()}{Path.GetExtension(model.Cover.FileName)}";
-            var path = Path.Combine(imagepath, covername);
-            using var stream = File.Create(path);
-            await model.Cover.CopyToAsync(stream);
+            var covername = await gameformrepo.SaveCover(model.Cover);
 
             Games game = new()
             {
@@ -68,9 +69,43 @@ namespace PixelPlay.Repositories.Repos
             await context.SaveChangesAsync();
         }
 
-        public void Update(Games games)
+        public async Task<Games?> Update(EditGameFormViewModel model)
         {
-            context.Update(games);
+            var game = context.Games
+                .Include(d => d.GameDevices)
+                .Include(c => c.GameCategories)
+                .FirstOrDefault(x => x.Id == model.Id);
+            var hasnewcover = model.Cover is not null;
+            var oldcover = game.Cover;
+            if (game is null)
+            {
+                return null;
+            }
+            game.Name = model.Name;
+            game.Description = model.Description;
+            game.GameDevices = model.GameDevices.Select(d => new GameDevices { DeviceId = d }).ToList();
+            game.GameCategories = model.GameCategories.Select(c => new GameCategories { CategoryId = c }).ToList();
+            if (hasnewcover)
+            {
+                game.Cover = await gameformrepo.SaveCover(model.Cover!);
+            }
+            var effectedrows = context.SaveChanges();
+            if (effectedrows > 0)
+            {
+                if (hasnewcover)
+                {
+                    var cover = Path.Combine(imagepath,oldcover);
+                    File.Delete(cover);
+                }
+                return game;
+            }
+            else
+            {
+                var cover = Path.Combine(imagepath, game.Cover);
+                File.Delete(cover);
+
+                return null;
+            }           
         }
     }
 }

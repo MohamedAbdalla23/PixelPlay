@@ -1,4 +1,5 @@
-﻿namespace PixelPlay.Models
+﻿
+namespace PixelPlay.Models
 {
     public class GameDevices
     {
@@ -11,5 +12,10 @@
         public int DeviceId { get; set; }
 
         public Devices Device { get; set; }
+
+        public static implicit operator int(GameDevices v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

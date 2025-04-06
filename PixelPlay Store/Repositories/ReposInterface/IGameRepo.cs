@@ -4,11 +4,11 @@
 
     public Games GetById(int id);
 
-    public Task Create(GameFormViewModel model);
+    public Task Create(CreateGameFormViewModel model);
 
     public void Delete(int id);
 
-    public void Update(Games games);
+    public Task<Games?> Update(EditGameFormViewModel model);
 
     public Task Save();
 }

@@ -4,6 +4,7 @@ global using PixelPlay.Settings;
 global using PixelPlay.ViewModel;
 global using PixelPlay.Validations;
 global using PixelPlay.Repositories.Repos;
+global using PixelPlay.ViewModel.Base_Entity;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.AspNetCore.Mvc.Rendering;
 global using System.ComponentModel.DataAnnotations;

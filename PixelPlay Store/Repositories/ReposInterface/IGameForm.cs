@@ -2,8 +2,12 @@
 {
     public interface IGameForm
     {
-        public List<SelectListItem> GetDevicesData();
+        //The Old Interface(Abstraction)
+        //************************************
+        //public List<SelectListItem> GetDevicesData();
 
-        public List<SelectListItem> GetCategoriesData();
+        //public List<SelectListItem> GetCategoriesData();
+
+        public Task<string> SaveCover(IFormFile file);
     }
 }

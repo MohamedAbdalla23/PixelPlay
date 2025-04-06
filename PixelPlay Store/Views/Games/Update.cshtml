@@ -1,35 +1,51 @@
-﻿@model Games
+﻿@model EditGameFormViewModel
 @{
     ViewData["Title"] = "Update";
 }
 
-<h1>Update</h1>
+<h1>Update Game</h1>
 
-<h4>Games</h4>
 <hr />
+
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="col-md-6 pe-4">
+        <form asp-controller="Games" asp-action="Update" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Cover" class="control-label"></label>
-                <input asp-for="Cover" class="form-control" />
-                <span asp-validation-for="Cover" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                <label asp-for="Name" class="form-label mt-4"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <label asp-for="GameDevices" class="form-label mt-4">Supported Devices</label>
+                <select class="form-select" asp-for="GameDevices" asp-items="Model.Devices">
+                    <option></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="GameCategories" class="form-label mt-4"></label>
+                <select class="form-select" asp-for="GameCategories" asp-items="Model.Categories">
+                    <option></option>
+                </select>
+                <span asp-validation-for="GameDevices" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="form-label mt-4"></label>
+                <textarea asp-for="Description" class="form-control" ></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cover" class="form-label mt-4"></label>
+                <input asp-for="Cover" class="form-control" /> 
+                <span asp-validation-for="Cover" class="text-danger"></span>
+            </div>           
+            <div class="form-group mt-3">
+                <button asp-action="Update" asp-controller="Games" type="submit" value="Update" class="btn btn-primary">Submit</button>
             </div>
         </form>
+    </div>
+    <div class="cover-section col-md-5 pt-4 d-flex justify-content-center overflow-hidden border-light">
+        <img class="cover-preview" alt="Cover " src="@FileSettings.ImagesPath/@Model.CurrentCover" />
     </div>
 </div>
 

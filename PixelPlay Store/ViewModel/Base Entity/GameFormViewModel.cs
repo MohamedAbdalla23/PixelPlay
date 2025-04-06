@@ -1,4 +1,4 @@
-﻿namespace PixelPlay.ViewModel
+﻿namespace PixelPlay.ViewModel.Base_Entity
 {
     public class GameFormViewModel
     {
@@ -6,11 +6,7 @@
         public string Name { get; set; } = string.Empty;
 
         [MaxLength(2500)]
-        public string Description { get; set; } = string.Empty;
-
-        [AllowedExtensions(FileSettings.AllowedExtensions),
-            MaxFileSize(FileSettings.MaxImageSizeinBytes)]
-        public IFormFile Cover { get; set; } = default!;
+        public string Description { get; set; } = string.Empty;      
 
         [Display(Name = "Game Devices")]
         public List<int> GameDevices { get; set; } = new List<int>();
@@ -19,7 +15,8 @@
 
         [Display(Name = "Game Categories")]
         public List<int> GameCategories { get; set; } = new List<int>();
-        
+
         public IEnumerable<SelectListItem> Categories { get; set; } = Enumerable.Empty<SelectListItem>();
     }
 }
+

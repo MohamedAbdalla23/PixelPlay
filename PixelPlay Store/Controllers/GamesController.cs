@@ -37,7 +37,7 @@ namespace PixelPlay.Controllers
                 searchString = currentFilter;
             }
             
-            int pageSize = 3;
+            int pageSize = 6;
             var games = gamesrepo.GetAll();
             var paginatedGames = await PaginatedList<Games>.CreateAsync(games, pageNumber ?? 1, pageSize);
             return View(paginatedGames);
@@ -57,7 +57,7 @@ namespace PixelPlay.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            GameFormViewModel Viewmodel = new()
+            CreateGameFormViewModel Viewmodel = new()
             {
                 Categories = categoriesrepo.GetCategoriesData(),
                 Devices = devicesrepo.GetDevicesData()
@@ -66,10 +66,12 @@ namespace PixelPlay.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(GameFormViewModel model)
+        public async Task<IActionResult> Create(CreateGameFormViewModel model)
         {
             if (!ModelState.IsValid)
             {
+                model.Devices = devicesrepo.GetDevicesData();
+                model.Categories = categoriesrepo.GetCategoriesData();
                 return View(model);
             } //the drop down list don't show when submit an invalid game *****
                 
@@ -83,15 +85,41 @@ namespace PixelPlay.Controllers
         [HttpGet]
         public IActionResult Update(int id)
         {
-            Games games = gamesrepo.GetById(id);
-            return View("Update", games);
+            var game = gamesrepo.GetById(id);
+            if (game is null)
+            {
+                return NotFound();
+            }
+            EditGameFormViewModel model = new()
+            {
+                Id = id,
+                Name = game.Name,
+                Description = game.Description,
+                GameDevices = game.GameDevices.Select(d => d.DeviceId).ToList(),
+                GameCategories = game.GameCategories.Select(c => c.CategoryId).ToList(),
+                Devices = devicesrepo.GetDevicesData(),
+                Categories = categoriesrepo.GetCategoriesData(),
+                CurrentCover = game.Cover
+            };
+            return View("Update", model);
         }
         [HttpPost]
-        public IActionResult Update(Games games)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(EditGameFormViewModel model)
         {
-            gamesrepo.Update(games);
-            gamesrepo.Save();
-            return RedirectToAction("Details");
+            if (!ModelState.IsValid)
+            {
+                model.Devices = devicesrepo.GetDevicesData();
+                model.Categories = categoriesrepo.GetCategoriesData();
+                return View(model);
+            }
+            
+            var game = await gamesrepo.Update(model);           
+            if (game is null)
+            {
+                return BadRequest(); 
+            }
+            return RedirectToAction(nameof(Index));
         }
 
 
