@@ -114,27 +114,28 @@ namespace PixelPlay.Controllers
                 return View(model);
             }
             
-            var game = await gamesrepo.Update(model);           
+            var game = await gamesrepo.UpdateGameAsync(model);           
             if (game is null)
             {
-                return BadRequest(); 
+                return RedirectToAction(nameof(Index)); 
             }
             return RedirectToAction(nameof(Index));
         }
 
 
-        [HttpGet]
-        public IActionResult Delete()
-        {
-            return View("Delete");
-        }
-        [HttpPost]
+        [HttpDelete]
         public IActionResult Delete(int id)
         {
-            gamesrepo.Delete(id);
-            gamesrepo.Save();
-            return RedirectToAction();
+            var isdeleted = gamesrepo.Delete(id);
+            return isdeleted ? Ok() : BadRequest();
         }
+        //[HttpPost]
+        //public IActionResult Delete()
+        //{
+            
+        //    gamesrepo.Save();
+        //    return RedirectToAction();
+        //}
 
 
     }

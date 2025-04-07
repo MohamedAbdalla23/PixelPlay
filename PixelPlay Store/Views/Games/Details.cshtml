@@ -35,7 +35,16 @@
         </div>       
     </div>
 </div>
-<div>
-    <a asp-action="Update" asp-controller="Games" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="d-flex justify-content">
+    <a class="btn btn-dark rounded rounded-3 me-2" asp-action="Update" asp-controller="Games" asp-route-id="@Model?.Id">
+        <i class="bi bi-pencil"></i>
+    </a> 
+    <a class="btn btn-danger rounded rounded-3 js-delete" asp-action="Delete" data-id="@Model?.Id">
+        <i class="bi bi-trash3"></i>
+    </a>
 </div>
+
+@section Scripts
+{
+    <script src="~/js/game-delete.js" asp-append-version="true"></script>
+}

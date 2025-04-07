@@ -1,5 +1,6 @@
 ﻿
 using PixelPlay.Repositories.ReposInterface;
+using System.Threading.Tasks;
 
 namespace PixelPlay.Repositories.Repos
 {
@@ -29,17 +30,25 @@ namespace PixelPlay.Repositories.Repos
                 GameCategories = model.GameCategories.Select(c => new GameCategories { CategoryId = c }).ToList(),
                 GameDevices = model.GameDevices.Select(d => new GameDevices { DeviceId = d }).ToList()
             };
-            context.Games.Add(game);            
+            context.Games.Add(game);
         }
 
-        public void Delete(int id)
+        public bool Delete(int id)
         {
+            var isdeleted = false;
             var game = context.Games.Find(id);
-            if (game == null)
+            if (game == null)            
+                return isdeleted;
+            
+            context.Remove(game);
+            var effectedrows = context.SaveChanges();
+            if (effectedrows > 0)
             {
-                throw new KeyNotFoundException($"Game with ID {id} was not found.");
+                isdeleted = true;
+                var cover = Path.Combine(imagepath, game.Cover);
+                File.Delete(cover);
             }
-            context.Remove(game);             
+            return isdeleted;
         }
 
         public IQueryable<Games> GetAll()
@@ -49,7 +58,7 @@ namespace PixelPlay.Repositories.Repos
                 .ThenInclude(d => d.Device)
                 .Include(g => g.GameCategories)
                 .ThenInclude(d => d.Category)
-                .AsNoTracking()                 ??
+                .AsNoTracking() ??
                 throw new InvalidOperationException("There was no Games to be found!");
         }
 
@@ -61,7 +70,7 @@ namespace PixelPlay.Repositories.Repos
                 .Include(g => g.GameCategories)
                 .ThenInclude(d => d.Category)
                 .AsNoTracking()
-                .FirstOrDefault(x => x.Id == id)!;                 
+                .FirstOrDefault(x => x.Id == id)!;
         }
 
         public async Task Save()
@@ -69,43 +78,54 @@ namespace PixelPlay.Repositories.Repos
             await context.SaveChangesAsync();
         }
 
-        public async Task<Games?> Update(EditGameFormViewModel model)
+        public async Task<Games?> UpdateGameAsync(EditGameFormViewModel model)
         {
             var game = context.Games
                 .Include(d => d.GameDevices)
                 .Include(c => c.GameCategories)
                 .FirstOrDefault(x => x.Id == model.Id);
-            var hasnewcover = model.Cover is not null;
-            var oldcover = game.Cover;
+
             if (game is null)
-            {
                 return null;
-            }
+
+            var oldcover = game.Cover;
+            var hasNewCover = model.Cover is not null;
+
             game.Name = model.Name;
             game.Description = model.Description;
+
+            context.GameDevices.RemoveRange(game.GameDevices);
+            context.GameCategories.RemoveRange(game.GameCategories);
+
             game.GameDevices = model.GameDevices.Select(d => new GameDevices { DeviceId = d }).ToList();
             game.GameCategories = model.GameCategories.Select(c => new GameCategories { CategoryId = c }).ToList();
-            if (hasnewcover)
+
+            string? newCoverPath = null;
+            if (hasNewCover)
             {
-                game.Cover = await gameformrepo.SaveCover(model.Cover!);
+                newCoverPath = await gameformrepo.SaveCover(model.Cover!);
+                game.Cover = newCoverPath;
             }
-            var effectedrows = context.SaveChanges();
-            if (effectedrows > 0)
+
+            var affectedRows = await context.SaveChangesAsync();
+            if (affectedRows > 0)
             {
-                if (hasnewcover)
+                if (hasNewCover && File.Exists(Path.Combine(imagepath, oldcover)))
                 {
-                    var cover = Path.Combine(imagepath,oldcover);
-                    File.Delete(cover);
+                    try { File.Delete(Path.Combine(imagepath, oldcover)); } catch { /* optionally log */ }
                 }
                 return game;
             }
             else
             {
-                var cover = Path.Combine(imagepath, game.Cover);
-                File.Delete(cover);
-
+                // Rollback: delete the newly saved file if SaveChanges failed
+                if (hasNewCover && newCoverPath is not null && File.Exists(Path.Combine(imagepath, newCoverPath)))
+                {
+                    try { File.Delete(Path.Combine(imagepath, newCoverPath)); } catch { /* optionally log */ }
+                }
                 return null;
-            }           
+            }
         }
+
     }
 }

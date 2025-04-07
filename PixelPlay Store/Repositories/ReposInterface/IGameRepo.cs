@@ -6,9 +6,9 @@
 
     public Task Create(CreateGameFormViewModel model);
 
-    public void Delete(int id);
+    public bool Delete(int id);
 
-    public Task<Games?> Update(EditGameFormViewModel model);
+    public Task<Games?> UpdateGameAsync(EditGameFormViewModel model);
 
     public Task Save();
 }
