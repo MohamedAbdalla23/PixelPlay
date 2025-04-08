@@ -39,7 +39,7 @@
     <a class="btn btn-dark rounded rounded-3 me-2" asp-action="Update" asp-controller="Games" asp-route-id="@Model?.Id">
         <i class="bi bi-pencil"></i>
     </a> 
-    <a class="btn btn-danger rounded rounded-3 js-delete" asp-action="Delete" data-id="@Model?.Id">
+    <a href="javascript:;" class="btn btn-danger rounded rounded-3 js-delete" data-id="@Model!.Id">
         <i class="bi bi-trash3"></i>
     </a>
 </div>

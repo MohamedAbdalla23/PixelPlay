@@ -70,16 +70,20 @@ namespace PixelPlay.Controllers
         {
             if (!ModelState.IsValid)
             {
+                // Populate the model with devices and categories for the view
                 model.Devices = devicesrepo.GetDevicesData();
                 model.Categories = categoriesrepo.GetCategoriesData();
-                return View(model);
-            } //the drop down list don't show when submit an invalid game *****
-                
+                return Ok(new { success = false, message = "Invalid data", model });
+            }
+
+            // Proceed with saving the game if valid
             await gamesrepo.Create(model);
             await gamesrepo.Save();
-            TempData["SuccessMessage"] = "Game created successfully!";
-            return RedirectToAction(nameof(Index));
+
+            // Return success status and message for AJAX response
+            return Ok(new { success = true, message = "Game created successfully!" });
         }
+
 
 
         [HttpGet]
@@ -126,13 +130,17 @@ namespace PixelPlay.Controllers
         [HttpDelete]
         public IActionResult Delete(int id)
         {
-            var isdeleted = gamesrepo.Delete(id);
-            return isdeleted ? Ok() : BadRequest();
+            var isDeleted = gamesrepo.Delete(id);
+
+            return isDeleted
+                ? Ok(new { message = "Game deleted successfully." })
+                : NotFound(new { message = "Game not found." });
         }
+
         //[HttpPost]
         //public IActionResult Delete()
         //{
-            
+
         //    gamesrepo.Save();
         //    return RedirectToAction();
         //}

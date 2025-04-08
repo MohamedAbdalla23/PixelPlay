@@ -35,21 +35,32 @@ namespace PixelPlay.Repositories.Repos
 
         public bool Delete(int id)
         {
-            var isdeleted = false;
-            var game = context.Games.Find(id);
-            if (game == null)            
-                return isdeleted;
-            
-            context.Remove(game);
-            var effectedrows = context.SaveChanges();
-            if (effectedrows > 0)
+            var game = context.Games
+                .Include(g => g.GameDevices)
+                .Include(g => g.GameCategories)
+                .FirstOrDefault(g => g.Id == id);
+
+            if (game == null)
+                return false;
+
+            context.GameDevices.RemoveRange(game.GameDevices);
+            context.GameCategories.RemoveRange(game.GameCategories);
+            context.Games.Remove(game);
+
+            var affectedRows = context.SaveChanges();
+            if (affectedRows > 0)
             {
-                isdeleted = true;
-                var cover = Path.Combine(imagepath, game.Cover);
-                File.Delete(cover);
+                var coverPath = Path.Combine(imagepath, game.Cover);
+                if (File.Exists(coverPath))
+                {
+                    try { File.Delete(coverPath); } catch { /* log error */ }
+                }
+                return true;
             }
-            return isdeleted;
+
+            return false;
         }
+
 
         public IQueryable<Games> GetAll()
         {

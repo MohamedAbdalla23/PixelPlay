@@ -121,4 +121,18 @@ body {
 /* End override select2 */
 
 
+
+/* Start override sweetalert2*/
+
+div:where(.swal2-container) div:where(.swal2-popup) {
+    background: #303030;
+    border-radius: 27px;
+}
+
+.swal2-title, .swal2-html-container {
+    color:#fff;
+}
+/* End override sweetalert2*/
+
+
 /*End of the custom style*/
