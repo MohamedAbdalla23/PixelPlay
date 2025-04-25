@@ -29,8 +29,8 @@
             <div>
                 <label asp-for="GameDevices" class="form-label mt-4"></label>
                 <select class="form-select" asp-for="GameDevices" asp-items="Model.Devices"
-                        data-placeholder="Please Select Devices">
-                    <option></option>
+                        option-label="Please Select Devices" data-placeholder="Please Select Devices">
+                    <option></option> <!--option-label work the same way the option tag instead of manually create it-->
                 </select>
                 <span asp-validation-for="GameDevices" class="text-danger"></span>
             </div>

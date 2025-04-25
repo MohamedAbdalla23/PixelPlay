@@ -3,7 +3,10 @@
     ViewData["Title"] = "Update";
 }
 
-<h1>Update Game</h1>
+<h1>
+    <i class="bi bi-pencil"></i>
+    Update Game
+</h1>
 
 <hr />
 
@@ -19,13 +22,11 @@
             <div class="form-group">
                 <label asp-for="GameDevices" class="form-label mt-4">Supported Devices</label>
                 <select class="form-select" asp-for="GameDevices" asp-items="Model.Devices">
-                    <option></option>
                 </select>
             </div>
             <div class="form-group">
                 <label asp-for="GameCategories" class="form-label mt-4"></label>
-                <select class="form-select" asp-for="GameCategories" asp-items="Model.Categories">
-                    <option></option>
+                <select class="form-select" asp-for="GameCategories" asp-items="Model.Categories">               
                 </select>
                 <span asp-validation-for="GameDevices" class="text-danger"></span>
             </div>
@@ -36,16 +37,32 @@
             </div>
             <div class="form-group">
                 <label asp-for="Cover" class="form-label mt-4"></label>
-                <input asp-for="Cover" class="form-control" /> 
+                <input asp-for="Cover" class="form-control" type="file" id="coverInput" />
                 <span asp-validation-for="Cover" class="text-danger"></span>
-            </div>           
+            </div>
+
             <div class="form-group mt-3">
                 <button asp-action="Update" asp-controller="Games" type="submit" value="Update" class="btn btn-primary">Submit</button>
             </div>
         </form>
     </div>
     <div class="cover-section col-md-5 pt-4 d-flex justify-content-center overflow-hidden border-light">
-        <img class="cover-preview" alt="Cover " src="@FileSettings.ImagesPath/@Model.CurrentCover" />
+        <img id="coverPreview" class="cover-preview" alt="Cover" src="@FileSettings.ImagesPath/@Model.CurrentCover" style="max-width: 100%; max-height: 300px;" />
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.getElementById('coverInput').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('coverPreview').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}
 
