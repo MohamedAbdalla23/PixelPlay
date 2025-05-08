@@ -1,0 +1,24 @@
+﻿@model Games
+
+<div class="col-lg-4 col-md-6">
+    <a class="card border-primary mb-3 text-decoration-none" style="max-width: 20rem;" asp-controller="Games" asp-action="Details" asp-route-id="@Model.Id">
+        <div class="card-header">@Model.Name</div>
+        <div class="card-body" style="background-image:url(@($"{@FileSettings.ImagesPath}/{@Model.Cover}")); background-size:cover; background-position:center; height:400px">
+        </div>
+        <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+            <div class="align-items-end h-100">
+                @foreach (var gamecategories in Model.GameCategories)
+                {
+                        <span class="badge rounded-pill bg-secondary">@gamecategories.Category.Name</span>
+                }
+            </div>
+            <div>
+                @foreach (var gamedevices in Model.GameDevices)
+                {
+                        <i class="@gamedevices.Device.Icon me-2 fs-4"></i>
+                }
+            </div>
+        </div>
+    </a>
+</div>
+

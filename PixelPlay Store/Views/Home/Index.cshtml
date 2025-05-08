@@ -1,8 +1,72 @@
-﻿@{
+﻿@model GamesIndexViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div>
+    <h1 class="display-4 text-center">Welcome</h1>
+    @* <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p> *@
+    <hr />
+
+    <h3> 
+        <i class="bi bi-dpad"></i>
+        Games       
+    </h3>
+
+    @if (!Model.PagedGames!.Any())
+    {
+        <div class="alert alert-danger mt-5">
+            <h4 class="alert-heading">No Games!</h4>
+            <p class="mb-0">No games were added yet!.</p>
+        </div>
+    }
+
+    <!--Main Section-->
+    <div class="position-relative">
+        <button class="scroll-btn left btn btn-primary" onclick="scrollContainer('left')">
+            &#10094;
+        </button>
+
+        <div id="games-scroll-container" class="d-flex overflow-auto gap-2 px-4" style="scroll-behavior: smooth;">
+            @foreach (var item in Model.PagedGames!)
+            {
+                <div style="min-width: 100px; flex: 0 0 auto;">
+                    @await Html.PartialAsync("_GameCard", item)
+                </div>
+            }
+        </div>
+
+        <button class="scroll-btn right btn btn-primary" onclick="scrollContainer('right')">
+            &#10095;
+        </button>
+    </div>
+
+    <div class="d-flex justify-content-center my-3">
+        <a asp-controller="Games" asp-action="Index" class="btn btn-primary">
+            Check All Games <i class="bi bi-arrow-right"></i>
+        </a>
+    </div>
+
+    <hr />
+
+
+    <h2><a href="#">Action</a></h2>                         <!--Action Section-->
+    <div class="row mt-3">
+        @foreach (var item in Model.ActionGames!)
+        {
+            if (item.GameCategories.Any(x => x.CategoryId == 1))
+            {
+                @await Html.PartialAsync("_GameCard", item)
+            }           
+        }
+    </div>
+
+    <hr />
+
+    <h2> <a href="#">Adventure</a></h2>                     <!--Adventure Section-->
+
+    <hr />
+
+
+
 </div>

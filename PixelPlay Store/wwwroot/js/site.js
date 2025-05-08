@@ -16,3 +16,16 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+
+function scrollContainer(direction) {
+    const container = document.getElementById('games-scroll-container');
+const scrollAmount = 350;
+
+if (direction === 'left') {
+    container.scrollLeft -= scrollAmount;
+    } else {
+    container.scrollLeft += scrollAmount;
+    }
+}
+
