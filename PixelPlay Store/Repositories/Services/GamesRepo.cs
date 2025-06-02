@@ -20,7 +20,7 @@ namespace PixelPlay.Repositories.Repos
 
         public async Task Create(CreateGameFormViewModel model)
         {
-            var covername = await gameformrepo.SaveCover(model.Cover);
+            var covername = await gameformrepo.SaveCoverWithResizeAsync(model.Cover, 300, 250);
 
             Games game = new()
             {
@@ -32,6 +32,7 @@ namespace PixelPlay.Repositories.Repos
             };
             context.Games.Add(game);
         }
+
 
         public bool Delete(int id)
         {
@@ -73,6 +74,7 @@ namespace PixelPlay.Repositories.Repos
                 throw new InvalidOperationException("There was no Games to be found!");
         }
 
+
         public Games GetById(int id)
         {
             return context.Games
@@ -84,10 +86,12 @@ namespace PixelPlay.Repositories.Repos
                 .FirstOrDefault(x => x.Id == id)!;
         }
 
+
         public async Task Save()
         {
             await context.SaveChangesAsync();
         }
+
 
         public async Task<Games?> UpdateGameAsync(EditGameFormViewModel model)
         {
@@ -114,7 +118,7 @@ namespace PixelPlay.Repositories.Repos
             string? newCoverPath = null;
             if (hasNewCover)
             {
-                newCoverPath = await gameformrepo.SaveCover(model.Cover!);
+                newCoverPath = await gameformrepo.SaveCoverWithResizeAsync(model.Cover!, 300, 350);
                 game.Cover = newCoverPath;
             }
 

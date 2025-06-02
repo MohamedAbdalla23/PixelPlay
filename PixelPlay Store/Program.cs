@@ -15,6 +15,7 @@ builder.Services.AddScoped<IGameRepo, GamesRepo>();
 builder.Services.AddScoped<IGameForm, GameForm>();
 builder.Services.AddScoped<ICategoriesRepo, CategoriesRepo>();
 builder.Services.AddScoped<IDevicesRepo, DevicesRepo>();
+builder.Services.AddScoped<IImageProcessingService, ImageProcessingService>();
 
 var app = builder.Build();
 

@@ -1,0 +1,86 @@
+﻿@model Games
+
+<style>
+    .game-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 0.375rem; /* Bootstrap rounded */
+    }
+
+    .game-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
+        text-decoration: none !important;
+    }
+
+    .game-card-img-wrapper {
+        height: 200px;
+        overflow: hidden;
+        border-top-left-radius: 0.375rem;
+        border-top-right-radius: 0.375rem;
+    }
+
+        .game-card-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+    .game-card:hover .game-card-img-wrapper img {
+        transform: scale(1.05);
+    }
+
+    .game-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .card-footer {
+        border-top: none;
+        
+        padding: 0.5rem 1rem;
+    }
+</style>
+
+<div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+    <div class="card game-card shadow-sm h-100 d-flex flex-column">
+        <a asp-controller="Games" asp-action="Details" asp-route-id="@Model.Id"
+           class="text-decoration-none text-dark d-block flex-grow-1">
+            <!-- Game Cover Image -->
+            <div class="game-card-img-wrapper">
+                <img src="@($"{FileSettings.ImagesPath}/{Model.Cover}")" alt="@Model.Name" class="img-fluid" />
+            </div>
+
+            <!-- Game Title & Info -->
+            <div class="card-body p-3">
+                <div class="game-title text-truncate text-white mb-2" title="@Model.Name">@Model.Name</div>
+
+                <!-- Categories -->
+                <div class="mb-2 d-flex flex-wrap gap-1">
+                    @foreach (var gamecategories in Model.GameCategories)
+                    {
+                        <span class="badge bg-secondary small">@gamecategories.Category.Name</span>
+                    }
+                </div>
+
+                <!-- Devices -->
+                <div class="d-flex">
+                    @foreach (var gamedevices in Model.GameDevices)
+                    {
+                        <i class="@gamedevices.Device.Icon text-primary fs-5 me-2"></i>
+                    }
+                </div>
+            </div>
+        </a>
+
+        <!-- Add to Cart Button -->
+        <div class="card-footer bg-light">
+            <form asp-controller="Cart" asp-action="Add" method="post" class="d-grid">
+                <input type="hidden" name="gameId" value="@Model.Id" />
+                <button type="submit" class="btn btn-sm btn-outline-primary w-100">
+                    <i class="bi bi-cart-plus me-1"></i> Add to Cart
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

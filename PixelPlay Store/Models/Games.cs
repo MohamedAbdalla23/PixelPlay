@@ -9,6 +9,8 @@ namespace PixelPlay.Models
         [MaxLength(500)]
         public string Cover { get; set; } = string.Empty;
 
+        public string? Trailer { get; set; }
+
 
         public ICollection<GameDevices> GameDevices { get; set; } = new List<GameDevices>();
 
