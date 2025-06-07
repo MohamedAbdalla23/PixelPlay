@@ -18,11 +18,7 @@ namespace PixelPlay.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(
-            string sortOrder,
-            string currentFilter,
-            string searchString,
-            int? pageNumber)
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
@@ -42,6 +38,7 @@ namespace PixelPlay.Controllers
             var paginatedGames = await PaginatedList<Games>.CreateAsync(games, pageNumber ?? 1, pageSize);
             return View(paginatedGames);
         }
+
         [HttpGet]
         public IActionResult Details(int id)
         {
@@ -54,6 +51,7 @@ namespace PixelPlay.Controllers
         }
 
 
+
         [HttpGet]
         public IActionResult Create()
         {
@@ -64,6 +62,7 @@ namespace PixelPlay.Controllers
             };
             return View(Viewmodel);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateGameFormViewModel model)
@@ -107,6 +106,7 @@ namespace PixelPlay.Controllers
             };
             return View("Update", model);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(EditGameFormViewModel model)
@@ -125,6 +125,7 @@ namespace PixelPlay.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
 
 
         [HttpDelete]

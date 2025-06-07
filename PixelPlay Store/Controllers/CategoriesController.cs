@@ -1,71 +1,69 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PixelPlay.Models;
+using PixelPlay.Repositories.ReposInterface;
 
 namespace PixelPlay.Controllers
 {
     public class CategoriesController : Controller
     {
         private readonly MyDbContext _context;
+        private readonly IGameRepo gamesrepo;
+        private readonly ICategoriesRepo categoryrepo;
 
-        public CategoriesController(MyDbContext context)
+        public CategoriesController(MyDbContext context, IGameRepo gameRepo, ICategoriesRepo categoriesRepo)
         {
             _context = context;
+            gamesrepo = gameRepo;
+            categoryrepo = categoriesRepo;
         }
 
-        // GET: Categories
+        [HttpGet]
         public async Task<IActionResult> Index()
-        {
-            return View(await _context.Categories.ToListAsync());
+        {            
+            var categories = await categoryrepo.GetCategory()
+                .Include(x=>x.GameCategories).ToListAsync();            
+
+            var viewmodel = categories.Select(cat => new CategoryGameCountViewModel
+            {
+                Id = cat.Id,
+                Name = cat.Name,
+                NoGameCount = cat.GameCategories.Count
+            }).ToList();
+
+            return View(viewmodel);
         }
 
-        // GET: Categories/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var categories = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (categories == null)
-            {
-                return NotFound();
-            }
-
-            return View(categories);
-        }
-
-        // GET: Categories/Create
+      
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Categories/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Categories categories)
         {
             if (ModelState.IsValid)
-            {
-                _context.Add(categories);
-                await _context.SaveChangesAsync();
+            {               
+                await categoryrepo.AddCategory(categories);
+                await categoryrepo.Save();
                 return RedirectToAction(nameof(Index));
             }
             return View(categories);
         }
 
-        // GET: Categories/Edit/5
+
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
-            var categories = await _context.Categories.FindAsync(id);
+           
+            var categories = await categoryrepo.GetCategorybyId(id);
             if (categories == null)
             {
                 return NotFound();
@@ -73,9 +71,7 @@ namespace PixelPlay.Controllers
             return View(categories);
         }
 
-        // POST: Categories/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Categories categories)
@@ -89,8 +85,9 @@ namespace PixelPlay.Controllers
             {
                 try
                 {
-                    _context.Update(categories);
-                    await _context.SaveChangesAsync();
+                    //_context.Update(categories);
+                    await categoryrepo.UpdateCategory(categories);
+                    await categoryrepo.Save();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -108,42 +105,39 @@ namespace PixelPlay.Controllers
             return View(categories);
         }
 
-        // GET: Categories/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+
+        [HttpDelete]         
+        public IActionResult Delete(int id)
         {
-            if (id == null)
+            var isDeleted = categoryrepo.Delete(id);
+
+            if (isDeleted)
             {
-                return NotFound();
+                return Ok(new { message = "Category deleted successfully." });
             }
 
-            var categories = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (categories == null)
-            {
-                return NotFound();
-            }
-
-            return View(categories);
+            return NotFound(new { message = "Category not found." });
         }
 
-        // POST: Categories/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var categories = await _context.Categories.FindAsync(id);
-            if (categories != null)
-            {
-                _context.Categories.Remove(categories);
-            }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    var categories = await _context.Categories.FindAsync(id);
+        //    if (categories != null)
+        //    {
+        //        _context.Categories.Remove(categories);
+        //    }
+
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
         private bool CategoriesExists(int id)
         {
-            return _context.Categories.Any(e => e.Id == id);
+            //return _context.Categories.Any(e => e.Id == id);
+            return categoryrepo.Categoryisexist(id);
         }
     }
 }
