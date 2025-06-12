@@ -65,7 +65,7 @@ namespace PixelPlay.Repositories.Repos
             await context.SaveChangesAsync();
         }
 
-        public bool Categoryisexist(int id)
+        public bool CategoryIsExist(int id)
         {
            return context.Categories.Any(e => e.Id == id);
         }

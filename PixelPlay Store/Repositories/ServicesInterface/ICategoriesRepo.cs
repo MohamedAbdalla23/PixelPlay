@@ -18,6 +18,6 @@ namespace PixelPlay.Repositories.ReposInterface
 
         public Task Save();
 
-        public bool Categoryisexist(int id);
+        public bool CategoryIsExist(int id);
     }
 }

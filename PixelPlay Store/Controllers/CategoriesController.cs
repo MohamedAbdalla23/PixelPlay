@@ -1,19 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PixelPlay.Models;
 using PixelPlay.Repositories.ReposInterface;
 
 namespace PixelPlay.Controllers
 {
     public class CategoriesController : Controller
-    {
-        private readonly MyDbContext _context;
-        private readonly IGameRepo gamesrepo;
+    {        
         private readonly ICategoriesRepo categoryrepo;
 
-        public CategoriesController(MyDbContext context, IGameRepo gameRepo, ICategoriesRepo categoriesRepo)
-        {
-            _context = context;
-            gamesrepo = gameRepo;
+        public CategoriesController(ICategoriesRepo categoriesRepo)
+        {           
             categoryrepo = categoriesRepo;
         }
 
@@ -84,8 +79,7 @@ namespace PixelPlay.Controllers
             if (ModelState.IsValid)
             {
                 try
-                {
-                    //_context.Update(categories);
+                {                   
                     await categoryrepo.UpdateCategory(categories);
                     await categoryrepo.Save();
                 }
@@ -119,25 +113,9 @@ namespace PixelPlay.Controllers
             return NotFound(new { message = "Category not found." });
         }
 
-
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var categories = await _context.Categories.FindAsync(id);
-        //    if (categories != null)
-        //    {
-        //        _context.Categories.Remove(categories);
-        //    }
-
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
-
         private bool CategoriesExists(int id)
-        {
-            //return _context.Categories.Any(e => e.Id == id);
-            return categoryrepo.Categoryisexist(id);
+        {           
+            return categoryrepo.CategoryIsExist(id);
         }
     }
 }
