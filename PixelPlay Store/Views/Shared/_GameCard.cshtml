@@ -1,31 +1,92 @@
 ﻿@model Games
 
-<a class="card h-100 text-decoration-none shadow-sm d-flex flex-column" asp-controller="Games" asp-action="Details" asp-route-id="@Model.Id" style="max-width: 20rem;">
-    <div class="card-header text-truncate fw-bold text-white bg-primary text-center" title="@Model.Name">
-        @Model.Name
-    </div>
+<style>
+    .dark-game-card {
+        background-color: #1c1c1c;
+        color: #fff;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
 
-    <div class="card-body d-flex justify-content-center align-items-center p-2" style="flex-grow: 1; min-height: 250px;">
-        <img src="@($"{FileSettings.ImagesPath}/{Model.Cover}")"
-             alt="@Model.Name"
-             class="img-fluid"
-             style="max-height: 100%; max-width: 100%; object-fit: contain;" />
-    </div>
+        .dark-game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.3);
+        }
 
-    <div class="card-footer d-flex flex-column gap-2 px-2 pt-2">
-        <div class="d-flex flex-wrap gap-1 mb-1">
-            @foreach (var gamecategories in Model.GameCategories)
-            {
-                <span class="badge bg-secondary">@gamecategories.Category.Name</span>
-            }
-        </div>
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                @foreach (var gamedevices in Model.GameDevices)
-                {
-                    <i class="@gamedevices.Device.Icon me-2 fs-5"></i>
-                }
-            </div>           
+        .dark-game-card .card-header {
+            background-color: #343a40;
+            font-size: 1.05rem;
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            color: #fff;
+            text-align: center;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Limit to 2 lines */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            height: 3.4em; /* Fixed height (for 2 lines with padding) */
+        }
+
+        .dark-game-card .card-body {
+            background-color: #000;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Force same height for all image containers */
+            height: 220px; /* fixed height instead of min-height */
+        }
+
+        .dark-game-card img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .dark-game-card .card-footer {
+            background-color: #1c1c1c;
+            border-top: 1px solid #333;
+            padding: 0.75rem 1rem;
+        }
+
+        .dark-game-card .game-price {
+            color: #28a745;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .dark-game-card .btn {
+            border-radius: 999px;
+        }
+</style>
+
+<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4">
+    <div class="dark-game-card">
+        <a asp-controller="Games" asp-action="Details" asp-route-id="@Model.Id" class="text-decoration-none text-white">
+            <div class="card-header" title="@Model.Name">
+                @Model.Name
+            </div>
+
+            <div class="card-body">
+                <img src="@($"{FileSettings.ImagesPath}/{Model.Cover}")" alt="@Model.Name" class="img-fluid" />
+            </div>
+        </a>
+
+        <div class="card-footer mt-auto text-center">
+            <div class="game-price">$@Model.Price</div>
+
+            <form asp-controller="Cart" asp-action="Add" method="post" class="d-grid">
+                <input type="hidden" name="gameId" value="@Model.Id" />
+                <button type="submit" class="btn btn-success btn-sm w-100">
+                    <i class="bi bi-cart-plus me-1"></i> Add to Cart
+                </button>
+            </form>
         </div>
     </div>
-</a>
+</div>

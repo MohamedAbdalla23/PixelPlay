@@ -11,7 +11,7 @@ namespace PixelPlay.Models
 
         public string? Trailer { get; set; }
 
-        [Precision(3, 2)]
+        [Precision(5, 2)]
         public decimal Price { get; set; }
 
         public ICollection<GameDevices> GameDevices { get; set; } = new List<GameDevices>();

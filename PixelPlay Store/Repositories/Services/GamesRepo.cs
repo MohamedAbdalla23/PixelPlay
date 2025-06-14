@@ -108,6 +108,8 @@ namespace PixelPlay.Repositories.Repos
 
             game.Name = model.Name;
             game.Description = model.Description;
+            game.Price = model.Price;
+            game.Trailer = model.Trailer;
 
             context.GameDevices.RemoveRange(game.GameDevices);
             context.GameCategories.RemoveRange(game.GameCategories);
