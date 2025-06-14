@@ -97,6 +97,8 @@ namespace PixelPlay.Controllers
             {
                 Id = id,
                 Name = game.Name,
+                Price = game.Price,
+                Trailer = game.Trailer,
                 Description = game.Description,
                 GameDevices = game.GameDevices.Select(d => d.DeviceId).ToList(),
                 GameCategories = game.GameCategories.Select(c => c.CategoryId).ToList(),

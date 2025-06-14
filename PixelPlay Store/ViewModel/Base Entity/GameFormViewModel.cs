@@ -6,7 +6,12 @@
         public string Name { get; set; } = string.Empty;
 
         [MaxLength(2500)]
-        public string Description { get; set; } = string.Empty;      
+        public string Description { get; set; } = string.Empty;
+
+        public string? Trailer { get; set; }
+
+        [Precision(3, 2)]
+        public decimal Price { get; set; }
 
         [Display(Name = "Game Devices")]
         public List<int> GameDevices { get; set; } = new List<int>();
