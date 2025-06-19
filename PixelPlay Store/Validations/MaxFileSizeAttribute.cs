@@ -16,10 +16,10 @@
 
             if (file is not null)
             {
-                if(file.Length > maxfilesize)
+                if (file.Length > maxfilesize)
                 {
                     return new ValidationResult(errorMessage: $"Maximum allowed size is {maxfilesize} bytes!");
-                }       
+                }
             }
             return ValidationResult.Success;
         }

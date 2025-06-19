@@ -1,11 +1,11 @@
-﻿global using PixelPlay.Models;
+﻿global using Microsoft.AspNetCore.Mvc.Rendering;
+global using Microsoft.EntityFrameworkCore;
 global using PixelPlay.Data;
-global using PixelPlay.Settings;
-global using PixelPlay.ViewModel;
-global using PixelPlay.Validations;
+global using PixelPlay.Models;
 global using PixelPlay.Repositories.Repos;
 global using PixelPlay.Repositories.ServicesInterface;
+global using PixelPlay.Settings;
+global using PixelPlay.Validations;
+global using PixelPlay.ViewModel;
 global using PixelPlay.ViewModel.Base_Entity;
-global using Microsoft.EntityFrameworkCore;
-global using Microsoft.AspNetCore.Mvc.Rendering;
 global using System.ComponentModel.DataAnnotations;

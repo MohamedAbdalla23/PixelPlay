@@ -4,19 +4,19 @@ using PixelPlay.Repositories.ReposInterface;
 namespace PixelPlay.Controllers
 {
     public class CategoriesController : Controller
-    {        
+    {
         private readonly ICategoriesRepo categoryrepo;
 
         public CategoriesController(ICategoriesRepo categoriesRepo)
-        {           
+        {
             categoryrepo = categoriesRepo;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
-        {            
+        {
             var categories = await categoryrepo.GetCategory()
-                .Include(x=>x.GameCategories).ToListAsync();            
+                .Include(x => x.GameCategories).ToListAsync();
 
             var viewmodel = categories.Select(cat => new CategoryGameCountViewModel
             {
@@ -28,20 +28,20 @@ namespace PixelPlay.Controllers
             return View(viewmodel);
         }
 
-      
+
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Categories categories)
         {
             if (ModelState.IsValid)
-            {               
+            {
                 await categoryrepo.AddCategory(categories);
                 await categoryrepo.Save();
                 return RedirectToAction(nameof(Index));
@@ -57,7 +57,7 @@ namespace PixelPlay.Controllers
             {
                 return NotFound();
             }
-           
+
             var categories = await categoryrepo.GetCategorybyId(id);
             if (categories == null)
             {
@@ -66,7 +66,7 @@ namespace PixelPlay.Controllers
             return View(categories);
         }
 
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Categories categories)
@@ -79,7 +79,7 @@ namespace PixelPlay.Controllers
             if (ModelState.IsValid)
             {
                 try
-                {                   
+                {
                     await categoryrepo.UpdateCategory(categories);
                     await categoryrepo.Save();
                 }
@@ -100,7 +100,7 @@ namespace PixelPlay.Controllers
         }
 
 
-        [HttpDelete]         
+        [HttpDelete]
         public IActionResult Delete(int id)
         {
             var isDeleted = categoryrepo.Delete(id);
@@ -114,7 +114,7 @@ namespace PixelPlay.Controllers
         }
 
         private bool CategoriesExists(int id)
-        {           
+        {
             return categoryrepo.CategoryIsExist(id);
         }
     }

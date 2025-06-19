@@ -1,7 +1,6 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using PixelPlay.Repositories.Repos;
 using PixelPlay_Store.Models;
+using System.Diagnostics;
 
 namespace PixelPlay_Store.Controllers
 {
@@ -18,60 +17,60 @@ namespace PixelPlay_Store.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Index()
-        {   
+        {
             var games = await gamesrepo.GetAll().Take(8).ToListAsync();
-            
+
             var game = await gamesrepo.GetAll().ToListAsync();
 
             //Get all Action Games separately
             var actionGames = game
                 .Where(g => g.GameCategories.Any(gc => gc.CategoryId == 1))
-                .Take(4).ToList();
+                .Take(6).ToList();
 
             //Get all Adventure Games separately
             var adventureGames = game
                 .Where(g => g.GameCategories.Any(gc => gc.CategoryId == 2))
-                .Take(4).ToList();
+                .Take(6).ToList();
 
             //Get all Arcade Games separately
             var arcadeGames = game
                 .Where(g => g.GameCategories.Any(gc => gc.CategoryId == 3))
-                .Take(4).ToList();
+                .Take(6).ToList();
 
             //Get all Horror Games separately
             var horrorGames = game
                 .Where(g => g.GameCategories.Any(gc => gc.CategoryId == 4))
-                .Take(4).ToList();
+                .Take(6).ToList();
 
             //Get all Fighting Games separately
             var fightingGames = game
                 .Where(g => g.GameCategories.Any(gc => gc.CategoryId == 5))
-                .Take(4).ToList();
+                .Take(6).ToList();
 
             //Get all Story Games separately
             var storyGames = game
                 .Where(g => g.GameCategories.Any(gc => gc.CategoryId == 6))
-                .Take(4).ToList();
+                .Take(6).ToList();
 
             //Get all Shooting Games separately
             var shootingGames = game
                 .Where(g => g.GameCategories.Any(gc => gc.CategoryId == 7))
-                .Take(4).ToList();
+                .Take(6).ToList();
 
             //Get all Sport Games separately
             var sportGames = game
                 .Where(g => g.GameCategories.Any(gc => gc.CategoryId == 8))
-                .Take(4).ToList();
+                .Take(6).ToList();
 
             //Get all Survival Games separately
             var survivalGames = game
                 .Where(g => g.GameCategories.Any(gc => gc.CategoryId == 9))
-                .Take(4).ToList();
+                .Take(6).ToList();
 
             //Get all Drama Games separately
-            var dramaGames = game       
+            var dramaGames = game
                 .Where(g => g.GameCategories.Any(gc => gc.CategoryId == 10))
-                .Take(4).ToList();
+                .Take(6).ToList();
 
             //Create a view model
             var viewModel = new GamesIndexViewModel

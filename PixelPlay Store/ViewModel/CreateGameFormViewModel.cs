@@ -4,6 +4,6 @@
     {
         [AllowedExtensions(FileSettings.AllowedExtensions),
             MaxFileSize(FileSettings.MaxImageSizeinBytes)]
-        public IFormFile Cover { get; set; } = default!;       
+        public IFormFile Cover { get; set; } = default!;
     }
 }

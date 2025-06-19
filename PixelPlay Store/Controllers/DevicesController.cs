@@ -27,7 +27,7 @@ namespace PixelPlay.Controllers
                 NoGameCount = cat.GameDevices.Count
             }).ToList();
 
-            return View(viewmodel);            
+            return View(viewmodel);
         }
 
         [HttpGet]
@@ -78,7 +78,7 @@ namespace PixelPlay.Controllers
             if (ModelState.IsValid)
             {
                 try
-                {                    
+                {
                     await devicerepo.UpdateDevice(devices);
                     await devicerepo.Save();
                 }
@@ -130,6 +130,6 @@ namespace PixelPlay.Controllers
         {
             return devicerepo.DeviceIsExist(id);
         }
-        
+
     }
 }

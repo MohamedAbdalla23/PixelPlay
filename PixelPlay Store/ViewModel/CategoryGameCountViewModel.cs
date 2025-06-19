@@ -9,6 +9,6 @@
 
         [Display(Name = "No. of games associated with category")]
         public int NoGameCount { get; set; }
-        
+
     }
 }

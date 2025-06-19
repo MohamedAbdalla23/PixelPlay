@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace PixelPlay.Repositories.ReposInterface
+﻿namespace PixelPlay.Repositories.ReposInterface
 {
     public interface ICategoriesRepo
     {

@@ -1,5 +1,4 @@
-﻿using PixelPlay.Models;
-using PixelPlay.Repositories.ReposInterface;
+﻿using PixelPlay.Repositories.ReposInterface;
 
 namespace PixelPlay.Repositories.Repos
 {
@@ -59,7 +58,7 @@ namespace PixelPlay.Repositories.Repos
                 return false;
             }
         }
-        
+
         public async Task Save()
         {
             await context.SaveChangesAsync();
@@ -68,6 +67,6 @@ namespace PixelPlay.Repositories.Repos
         public bool DeviceIsExist(int id)
         {
             return context.Devices.Any(e => e.Id == id);
-        }                         
+        }
     }
 }

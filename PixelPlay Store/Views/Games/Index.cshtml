@@ -1,85 +1,189 @@
-﻿@model PaginatedList<Games>
+﻿@model List<Games>
+@inject PixelPlay.Repositories.ReposInterface.ICategoriesRepo categoriesrepo
+@inject PixelPlay.Repositories.ReposInterface.IDevicesRepo devicesrepo
+
 @{
     ViewData["Title"] = "Games";
-
+    var currentSort = ViewData["CurrentSort"] as string ?? "";
+    var currentFilter = ViewData["CurrentFilter"] as string ?? "";
+    var selectedCategory = ViewData["SelectedCategory"] as string ?? "";
+    var categories = categoriesrepo.GetCategoriesData();
+    var selectedDevice = ViewData["SelectedDevice"] as string ?? "";
+    var devices = devicesrepo.GetDevicesData();
 }
 
 <style>
-    .card:hover {
-        transform: scale(1.02);
-        transition: transform 0.2s ease-in-out;
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: black;
+        line-height: 38px;
     }
 
+    .game-card {
+        border: none;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        transition: transform 0.2s ease-in-out;
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .game-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+    .game-img {
+        height: 220px;
+        object-fit: cover;
+    }
+
+    .game-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #0d6efd;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .category-badge {
+        background-color: #6c757d;
+        font-size: 0.75rem;
+        margin: 2px;
+    }
+
+    .device-icon {
+        font-size: 1.1rem;
+        color: #6c757d;
+    }
+
+    .game-price {
+        font-weight: 600;
+        color: #28a745;
+    }
+
+    .card-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
 </style>
-<h3>
-    <i class="bi bi-dpad"></i>
-    Games
+
+<h3 class="mb-4">
+    <i class="bi bi-dpad"></i> Games
 </h3>
+
+<!-- SORT & FILTER -->
+<form method="get" class="row g-3 mb-4 align-items-end">
+    <!-- Sort dropdown -->
+    <div class="col-md-3">
+        <label class="form-label">Sort</label>
+        <select name="sortOrder" class="form-select" onchange="this.form.submit()">
+            <option value="">Sort by Name ↑</option>
+            <option value="name_desc" selected="@(currentSort == "name_desc" ? "selected" : null)">Sort by Name ↓</option>
+            <option value="price_asc" selected="@(currentSort == "price_asc" ? "selected" : null)">Sort by Price ↑</option>
+            <option value="price_desc" selected="@(currentSort == "price_desc" ? "selected" : null)">Sort by Price ↓</option>
+        </select>
+    </div>
+
+    <!-- Category dropdown -->
+    <div class="col-md-3">
+        <label class="form-label">Category</label>
+        <select name="category" class="form-select" onchange="this.form.submit()">
+            <option value="">All Categories</option>
+            @foreach (var cat in categories)
+            {
+                <option value="@cat.Value" selected="@(selectedCategory == cat.Value ? "selected" : null)">
+                    @cat.Text
+                </option>
+            }
+        </select>
+    </div>
+
+    <!-- Device dropdown -->
+    <div class="col-md-3">
+        <label class="form-label">Device</label>
+        <select name="device" class="form-select" onchange="this.form.submit()">
+            <option value="">All Devices</option>
+            @foreach (var device in devices)
+            {
+                <option value="@device.Value" selected="@(selectedDevice == device.Value ? "selected" : null)">
+                    @device.Text
+                </option>
+            }
+        </select>
+    </div>
+
+    <!-- Search input -->
+    <div class="col-md-3">
+        <label class="form-label">Search</label>
+        <input type="text" name="searchString" class="form-control" value="@currentFilter" placeholder="Search by name..." />
+    </div>
+
+    <!-- Search & Reset buttons -->
+    <div class="col-md-3 d-flex gap-2">
+        <button type="submit" class="btn btn-primary w-50">
+            <i class="bi bi-search"></i> Search
+        </button>
+        <a href="@Url.Action("Index", "Games")" class="btn btn-secondary w-50">
+            <i class="bi bi-x-circle"></i> Reset
+        </a>
+    </div>
+</form>
+
 
 @if (!Model.Any())
 {
-    <div class="alert alert-danger mt-5"> 
+    <div class="alert alert-danger mt-5">
         <h4 class="alert-heading">No Games!</h4>
-        <p class="mb-0">No games were added yet!.</p>
+        <p class="mb-0">No games were found matching the filters.</p>
     </div>
 }
+else
+{
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4">
+                <div class="game-card">
+                    <a asp-controller="Games" asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none">
+                        <img src="@($"{FileSettings.ImagesPath}/{item.Cover}")"
+                             class="w-100 game-img"
+                             alt="@item.Name" />
+                    </a>
 
+                    <div class="card-body p-3">
+                        <div class="game-title" title="@item.Name">@item.Name</div> 
 
-<div class="row mt-5">
-    @foreach (var item in Model)
-    {
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card shadow-sm border-0 h-100">
-                <a asp-controller="Games" asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none text-dark">
-                    <img src="@($"{FileSettings.ImagesPath}/{item.Cover}")"
-                         class="card-img-top"
-                         alt="@item.Name"
-                         style="height: 250px; object-fit: cover;" />
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title text-primary text-truncate" title="@item.Name">@item.Name</h5>
                         <div class="mb-2">
-                            @foreach (var gamecategories in item.GameCategories)
+                            @foreach (var category in item.GameCategories)
                             {
-                                <span class="badge bg-secondary me-1">@gamecategories.Category.Name</span>
+                                <span class="badge category-badge">@category.Category.Name</span>
                             }
                         </div>
-                        <div class="mt-auto d-flex justify-content-between align-items-center">
+
+                        <div class="d-flex justify-content-between align-items-center mt-2">
                             <div>
-                                @foreach (var gamedevices in item.GameDevices)
+                                @foreach (var device in item.GameDevices)
                                 {
-                                    <i class="@gamedevices.Device.Icon me-2 fs-5 text-muted"></i>
+                                    <i class="@device.Device.Icon device-icon me-2"></i>
                                 }
                             </div>
-                            <form asp-controller="Cart" asp-action="Add" method="post" class="m-0">
-                                <input type="hidden" name="gameId" value="@item.Id" />
-                                <button type="submit" class="btn btn-sm btn-outline-primary">Add to Cart</button>
-                            </form>
+                            <span class="game-price">$@item.Price</span>
                         </div>
+
+                        <form asp-controller="Cart" asp-action="Add" method="post" class="mt-3">
+                            <input type="hidden" name="gameId" value="@item.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-primary w-100">
+                                <i class="bi bi-cart-plus me-1"></i> Add to Cart
+                            </button>
+                        </form>
                     </div>
-                </a>
+                </div>
             </div>
-        </div>
-        
-    }
-</div>
-
-@{
-    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+        }
+    </div>
 }
-
-<a asp-action="Index"
-   asp-route-sortOrder="@ViewData["CurrentSort"]"
-   asp-route-pageNumber="@(Model.PageIndex - 1)"
-   asp-route-currentFilter="@ViewData["CurrentFilter"]"
-   class="btn btn-default @prevDisabled">
-    Previous
-</a>
-<a asp-action="Index"
-   asp-route-sortOrder="@ViewData["CurrentSort"]"
-   asp-route-pageNumber="@(Model.PageIndex + 1)"
-   asp-route-currentFilter="@ViewData["CurrentFilter"]"
-   class="btn btn-default @nextDisabled">
-    Next
-</a>
-       

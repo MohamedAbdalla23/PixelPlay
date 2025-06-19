@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PixelPlay.Repositories.ReposInterface;
+﻿using PixelPlay.Repositories.ReposInterface;
 
 namespace PixelPlay.Repositories.Repos
 {
@@ -8,7 +7,7 @@ namespace PixelPlay.Repositories.Repos
         private readonly MyDbContext context;
         public CategoriesRepo(MyDbContext myDbContext)
         {
-            context = myDbContext; 
+            context = myDbContext;
         }
 
         public IEnumerable<SelectListItem> GetCategoriesData()
@@ -32,13 +31,13 @@ namespace PixelPlay.Repositories.Repos
 
         public async Task AddCategory(Categories categories)
         {
-            await context.Categories.AddAsync(categories);          
+            await context.Categories.AddAsync(categories);
         }
 
         public async Task UpdateCategory(Categories categories)
         {
-            context.Categories.Update(categories); 
-            await Save();      
+            context.Categories.Update(categories);
+            await Save();
         }
 
         public bool Delete(int id)
@@ -67,7 +66,7 @@ namespace PixelPlay.Repositories.Repos
 
         public bool CategoryIsExist(int id)
         {
-           return context.Categories.Any(e => e.Id == id);
+            return context.Categories.Any(e => e.Id == id);
         }
     }
 }

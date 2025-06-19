@@ -9,7 +9,7 @@ namespace PixelPlay.Controllers
         private readonly IGameForm gameformrepo;
         private readonly ICategoriesRepo categoriesrepo;
         private readonly IDevicesRepo devicesrepo;
-        public GamesController(IGameRepo gameRepo, IGameForm gameForm, ICategoriesRepo categoriesRepo, IDevicesRepo devicesRepo) 
+        public GamesController(IGameRepo gameRepo, IGameForm gameForm, ICategoriesRepo categoriesRepo, IDevicesRepo devicesRepo)
         {
             gamesrepo = gameRepo;
             gameformrepo = gameForm;
@@ -17,27 +17,43 @@ namespace PixelPlay.Controllers
             devicesrepo = devicesRepo;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
+        public async Task<IActionResult> Index(string sortOrder, string category, string device, string searchString)
         {
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["SelectedCategory"] = category;
+            ViewData["SelectedDevice"] = device;
+            ViewData["CurrentFilter"] = searchString;
 
-            if (searchString != null)
+            var games = gamesrepo.GetAll(); // IQueryable<Games>
+
+            if (!string.IsNullOrEmpty(category))
             {
-                pageNumber = 1;
+                games = games.Where(g => g.GameCategories.Any(gc => gc.CategoryId.ToString() == category));
             }
-            else
+
+            if (!string.IsNullOrEmpty(device))
             {
-                searchString = currentFilter;
+                games = games.Where(g => g.GameDevices.Any(gd => gd.DeviceId.ToString() == device));
             }
-            
-            int pageSize = 6;
-            var games = gamesrepo.GetAll();
-            var paginatedGames = await PaginatedList<Games>.CreateAsync(games, pageNumber ?? 1, pageSize);
-            return View(paginatedGames);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                games = games.Where(g => g.Name.Contains(searchString));
+            }
+
+            games = sortOrder switch
+            {
+                "name_desc" => games.OrderByDescending(g => g.Name),
+                "price_asc" => games.OrderBy(g => g.Price),
+                "price_desc" => games.OrderByDescending(g => g.Price),
+                _ => games.OrderBy(g => g.Name),
+            };
+
+            return View(await games.ToListAsync());
         }
+
+
+
 
         [HttpGet]
         public IActionResult Details(int id)
@@ -119,11 +135,11 @@ namespace PixelPlay.Controllers
                 model.Categories = categoriesrepo.GetCategoriesData();
                 return View(model);
             }
-            
-            var game = await gamesrepo.UpdateGameAsync(model);           
+
+            var game = await gamesrepo.UpdateGameAsync(model);
             if (game is null)
             {
-                return RedirectToAction(nameof(Index)); 
+                return RedirectToAction(nameof(Index));
             }
             return RedirectToAction(nameof(Index));
         }
