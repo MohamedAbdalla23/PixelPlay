@@ -1,19 +1,22 @@
-﻿@model GamesIndexViewModel
+﻿@using Microsoft.EntityFrameworkCore
+@using PixelPlay.Models
+@model List<Games>
 @{
-    ViewData["Title"] = "Home Page";
-    var categories = Model.Categories!.ToList();
+    ViewData["Title"] = "Home";
+@inject PixelPlay.Repositories.ReposInterface.ICategoriesRepo categoriesrepo
+    var categories = categoriesrepo.GetCategory();
 }
 
 <div>
-    <h1 class="display-4 text-center">Welcome</h1>    
+    <h1 class="display-4 text-center">Welcome</h1>
     <hr />
 
-    <h3> 
+    <h3>
         <i class="bi bi-dpad"></i>
-        Featured Games       
+        Featured Games
     </h3>
 
-    @if (!Model.PagedGames!.Any())
+    @if (!Model.Any())
     {
         <div class="alert alert-danger mt-5">
             <h4 class="alert-heading">No Games!</h4>
@@ -28,7 +31,7 @@
         </button>
 
         <div id="games-scroll-container" class="d-flex overflow-auto gap-3 px-4 py-2" style="scroll-behavior: smooth;">
-            @foreach (var item in Model.PagedGames!)
+            @foreach (var item in Model.Take(10))
             {
                 @await Html.PartialAsync("_GameCard", item)
             }
@@ -40,209 +43,37 @@
     </div>
 
     <div class="d-flex justify-content-center my-3">
-        <a asp-controller="Games" asp-action="Index" asp-area="User" class="btn btn-primary">
+        <a asp-controller="Games" asp-action="Index" asp-area="User" class="btn btn-dark btn-lg browse-all-btn">
             Browse All Games <i class="bi bi-arrow-right"></i>
         </a>
     </div>
 
     <hr />
 
+@foreach (var category in categories)
+{
+    var gamesInCategory = Model
+        .Where(g => g.GameCategories.Any(gc => gc.CategoryId == category.Id))
+        .Take(6).ToList();
 
-    <h2>Action</h2>                         <!--Action Section-->
-    <div class="row mt-3">
-        @foreach (var item in Model.ActionGames!)
-        {
-            if (item.GameCategories.Any(x => x.CategoryId == 1))
-            {
-                @await Html.PartialAsync("_ActionGameCard", item)
-            }
-        }
-    </div>
-
-    <!-- Browse All Games Button -->
-    <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" asp-area="User" asp-route-category="@categories.FirstOrDefault(x => x.Name == "Action")!.Id" class="btn btn-primary btn-lg browse-all-btn">
-            Browse All Action Games <i class="bi bi-arrow-right"></i>
-        </a>
-    </div>
-
-    <hr />    
-
-
-    <h2> Adventure</h2>                     <!--Adventure Section-->
-    <div class="row mt-3">
-        @foreach (var item in Model.AdventureGames!)
-        {
-            if (item.GameCategories.Any(x => x.CategoryId == @categories.FirstOrDefault(x => x.Name == "Adventure")!.Id))
-            {
-                @await Html.PartialAsync("_ActionGameCard", item)
-            }
-        }
-    </div>
-
-    <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" asp-area="User" asp-route-category="@categories.FirstOrDefault(x => x.Name == "Adventure")!.Id" class="btn btn-primary btn-lg browse-all-btn">
-            Browse All Adventure Games <i class="bi bi-arrow-right"></i>
-        </a>
-    </div>
-
-    <hr />
-
-
-    <h2>Arcade</h2>                     <!--Arcade Section-->
-    <div class="row mt-3">
-        @foreach (var item in Model.ArcadeGames!)
-        {
-            if (item.GameCategories.Any(x => x.CategoryId == 3))
-            {
-                @await Html.PartialAsync("_ActionGameCard", item)
-            }
-        }
-    </div>
-
-    <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" asp-area="User" asp-route-category="@categories.FirstOrDefault(x => x.Name == "Arcade")!.Id" class="btn btn-primary btn-lg browse-all-btn">
-            Browse All Arcade Games <i class="bi bi-arrow-right"></i>
-        </a>
-    </div>
-
-    <hr />
-    
-
-    <h2> Horror</h2>                     <!--Horror Section-->
-    <div class="row mt-3">
-        @foreach (var item in Model.HorrorGames!)
-        {
-            if (item.GameCategories.Any(x => x.CategoryId == 4))
-            {
-                @await Html.PartialAsync("_ActionGameCard", item)
-            }
-        }
-    </div>
-
-    <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" asp-area="User" asp-route-category="@categories.FirstOrDefault(x => x.Name == "Horror")!.Id" class="btn btn-primary btn-lg browse-all-btn">
-            Browse All Horror Games <i class="bi bi-arrow-right"></i>
-        </a>
-    </div>
-
-    <hr />
-    
-
-    <h2> Fighting</h2>                     <!--Fighting Section-->
-    <div class="row mt-3">
-        @foreach (var item in Model.FightingGames!)
-        {
-            if (item.GameCategories.Any(x => x.CategoryId == 5))
-            {
-                @await Html.PartialAsync("_ActionGameCard", item)
-            }
-        }
-    </div>
-
-    <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" asp-area="User" asp-route-category="@categories.FirstOrDefault(x => x.Name == "Fighting")!.Id" class="btn btn-primary btn-lg browse-all-btn">
-            Browse All Fighting Games <i class="bi bi-arrow-right"></i>
-        </a>
-    </div>
-
-    <hr />
-    
-    
-    <h2>Story</h2>                     <!--Story Section-->
-    <div class="row mt-3">
-        @foreach (var item in Model.StoryGames!)
-        {
-            if (item.GameCategories.Any(x => x.CategoryId == 6))
-            {
-                @await Html.PartialAsync("_ActionGameCard", item)
-            }
-        }
-    </div>
-
-    <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" asp-area="User" asp-route-category="@categories.FirstOrDefault(x => x.Name == "Story")!.Id" class="btn btn-primary btn-lg browse-all-btn">
-            Browse All Story Games <i class="bi bi-arrow-right"></i>
-        </a>
-    </div>
-
-    <hr /><h2>Shooting</h2>                     <!--Shooting Section-->
-    <div class="row mt-3">
-        @foreach (var item in Model.ShootingGames!)
-        {
-            if (item.GameCategories.Any(x => x.CategoryId == 7))
-            {
-                @await Html.PartialAsync("_ActionGameCard", item)
-            }
-        }
-    </div>
-
-    <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" asp-area="User" asp-route-category="@categories.FirstOrDefault(x => x.Name == "Shooting")!.Id" class="btn btn-primary btn-lg browse-all-btn">
-            Browse All Shooting Games <i class="bi bi-arrow-right"></i>
-        </a>
-    </div>
-
-    <hr />
-    
-    
-    <h2> Sport</h2>                     <!--Sport Section-->
-    <div class="row mt-3">
-        @foreach (var item in Model.SportGames!)
-        {
-            if (item.GameCategories.Any(x => x.CategoryId == 8))
-            {
-                @await Html.PartialAsync("_ActionGameCard", item)
-            }
-        }
-    </div>
-
-    <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" asp-area="User" asp-route-category="@categories.FirstOrDefault(x => x.Name == "Sport")!.Id" class="btn btn-primary btn-lg browse-all-btn">
-            Browse All Sport Games <i class="bi bi-arrow-right"></i>
-        </a>
-    </div>
-
-    <hr />
-    
-    
-    <h2> Survival</h2>                     <!--Survival Section-->
-    <div class="row mt-3">
-        @foreach (var item in Model.SurvivalGames!)
-        {
-            if (item.GameCategories.Any(x => x.CategoryId == 9))
-            {
-                @await Html.PartialAsync("_ActionGameCard", item)
-            }
-        }
-    </div>
-
-    <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" asp-area="User" asp-route-category="@categories.FirstOrDefault(x => x.Name == "Survival")!.Id" class="btn btn-primary btn-lg browse-all-btn">
-            Browse All Survival Games <i class="bi bi-arrow-right"></i>
-        </a>
-    </div>
-
-    <hr />
-    
-    
-    <h2> Drama</h2>                     <!--Drama Section-->
-    <div class="row mt-3">
-        @foreach (var item in Model.DramaGames!)
-        {
-            if (item.GameCategories.Any(x => x.CategoryId == 10))
-            {
-                @await Html.PartialAsync("_ActionGameCard", item)
-            }
-        }
-    </div>
-
-    <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" asp-area="User"asp-route-category="@categories.FirstOrDefault(x => x.Name == "Drama")!.Id" class="btn btn-primary btn-lg browse-all-btn">
-            Browse All Drama Games <i class="bi bi-arrow-right"></i>
-        </a>
-    </div>
-
-    <hr />
+    if (gamesInCategory.Any())
+    {
+        <section class="mb-2">
+            <h2 class="mb-3">@category.Name</h2>
+            <div class="row">
+                @foreach (var game in gamesInCategory)
+                {
+                    @await Html.PartialAsync("_ActionGameCard", game)
+                }
+            </div>
+        </section>
+            <div class="d-flex justify-content-center mb-3">
+                <a asp-controller="Games" asp-action="Index" asp-area="User" asp-route-category="@category.Id" class="btn btn-primary btn-lg browse-all-btn">
+                    Browse All @category.Name Games <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        <hr class="mt-1"/>    
+    }
+}
 
 </div>
