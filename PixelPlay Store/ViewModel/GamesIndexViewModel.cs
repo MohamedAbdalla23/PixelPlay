@@ -13,6 +13,6 @@
         public List<Games>? SportGames { get; set; }
         public List<Games>? SurvivalGames { get; set; }
         public List<Games>? DramaGames { get; set; }
-
+        public List<Categories>? Categories { get; set; }
     }
 }

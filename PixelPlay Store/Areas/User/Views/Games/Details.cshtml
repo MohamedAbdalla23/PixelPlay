@@ -1,0 +1,76 @@
+﻿@model Games
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<section class="container my-5">
+    <div class="card border-0 shadow-lg rounded-4 p-4">
+        <div class="row g-5">
+            <!-- Image Column -->
+            <div class="col-lg-4 text-center">
+                <img src="@FileSettings.ImagesPath/@Model.Cover"
+                     alt="@Model.Name"
+                     class="img-fluid rounded-4 shadow-sm"
+                     style="max-height: 450px;" />
+            </div>
+
+            <!-- Details Column -->
+            <div class="col-lg-8">
+                <h2 class="fw-bold">@Model.Name</h2>
+                <p class="text-muted">@Html.DisplayFor(m => m.Description)</p>
+
+                <hr class="my-4" />
+
+                <div class="mb-3">
+                    <h6 class="text-uppercase text-white fw-semibold">Categories</h6>
+                    <div>
+                        @foreach (var cat in Model.GameCategories)
+                        {
+                            <span class="badge bg-primary-subtle text-secondary border me-2">@cat.Category.Name</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <h6 class="text-uppercase text-white fw-semibold">Supported Devices</h6>
+                    <div>
+                        @foreach (var dev in Model.GameDevices)
+                        {
+                            <i class="@dev.Device.Icon fs-4 text-light me-3"></i>
+                        }
+                    </div>
+                </div>
+
+                <div class="my-4">
+                    <span class="fs-2 fw-bold text-success">$@Model.Price</span>
+                </div>
+
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="@Url.Action("Purchase", "Orders", new { id = Model.Id })" class="btn btn-success btn-lg px-4">
+                        <i class="bi bi-cart-check"></i> Add to Cart
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trailer Section -->
+        @if (Model!.Trailer is not null)
+        {
+            <div class="mt-5">
+                <h4 class="mb-3">Watch Game Trailer</h4>
+                <div class="ratio ratio-16x9 rounded-4 overflow-hidden">
+                    <iframe src="@FileSettings.Youtube/@Model.Trailer"
+                            title="Game Trailer"
+                            allowfullscreen
+                            class="border-0 w-100 h-100">
+                    </iframe>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@section Scripts
+{
+    <script src="~/js/game-delete.js" asp-append-version="true"></script>
+}

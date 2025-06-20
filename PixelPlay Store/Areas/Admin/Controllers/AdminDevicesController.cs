@@ -1,33 +1,35 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PixelPlay.Repositories.ReposInterface;
 
-namespace PixelPlay.Controllers
-{
-    public class CategoriesController : Controller
-    {
-        private readonly ICategoriesRepo categoryrepo;
 
-        public CategoriesController(ICategoriesRepo categoriesRepo)
+namespace PixelPlay.Areas.Admin.Controllers
+{
+    [Area("Admin")]
+    public class AdminDevicesController : Controller
+    {
+        private readonly IDevicesRepo devicerepo;
+
+        public AdminDevicesController(IDevicesRepo devicesRepo)
         {
-            categoryrepo = categoriesRepo;
+            devicerepo = devicesRepo;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var categories = await categoryrepo.GetCategory()
-                .Include(x => x.GameCategories).ToListAsync();
+            var categories = await devicerepo.GetDevice()
+                .Include(x => x.GameDevices).ToListAsync();
 
-            var viewmodel = categories.Select(cat => new CategoryGameCountViewModel
+            var viewmodel = categories.Select(cat => new DeviceGameCountViewModel
             {
                 Id = cat.Id,
+                Icon = cat.Icon,
                 Name = cat.Name,
-                NoGameCount = cat.GameCategories.Count
+                NoGameCount = cat.GameDevices.Count
             }).ToList();
 
             return View(viewmodel);
         }
-
 
         [HttpGet]
         public IActionResult Create()
@@ -35,18 +37,17 @@ namespace PixelPlay.Controllers
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Categories categories)
+        public async Task<IActionResult> Create([Bind("Icon,Id,Name")] Devices devices)
         {
             if (ModelState.IsValid)
             {
-                await categoryrepo.AddCategory(categories);
-                await categoryrepo.Save();
+                await devicerepo.AddDevice(devices);
+                await devicerepo.Save();
                 return RedirectToAction(nameof(Index));
             }
-            return View(categories);
+            return View(devices);
         }
 
 
@@ -58,20 +59,19 @@ namespace PixelPlay.Controllers
                 return NotFound();
             }
 
-            var categories = await categoryrepo.GetCategorybyId(id);
-            if (categories == null)
+            var devices = await devicerepo.GetDevicebyId(id);
+            if (devices == null)
             {
                 return NotFound();
             }
-            return View(categories);
+            return View(devices);
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Categories categories)
+        public async Task<IActionResult> Edit(int id, [Bind("Icon,Id,Name")] Devices devices)
         {
-            if (id != categories.Id)
+            if (id != devices.Id)
             {
                 return NotFound();
             }
@@ -80,12 +80,12 @@ namespace PixelPlay.Controllers
             {
                 try
                 {
-                    await categoryrepo.UpdateCategory(categories);
-                    await categoryrepo.Save();
+                    await devicerepo.UpdateDevice(devices);
+                    await devicerepo.Save();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CategoriesExists(categories.Id))
+                    if (!DevicesExists(devices.Id))
                     {
                         return NotFound();
                     }
@@ -96,14 +96,14 @@ namespace PixelPlay.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(categories);
+            return View(devices);
         }
 
 
         [HttpDelete]
         public IActionResult Delete(int id)
         {
-            var isDeleted = categoryrepo.Delete(id);
+            var isDeleted = devicerepo.Delete(id);
 
             if (isDeleted)
             {
@@ -111,11 +111,26 @@ namespace PixelPlay.Controllers
             }
 
             return NotFound(new { message = "Category not found." });
+            //if (id == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //var devices = await _context.Devices
+            //    .FirstOrDefaultAsync(m => m.Id == id);
+            //if (devices == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //return View(devices);
         }
 
-        private bool CategoriesExists(int id)
+
+        private bool DevicesExists(int id)
         {
-            return categoryrepo.CategoryIsExist(id);
+            return devicerepo.DeviceIsExist(id);
         }
+
     }
 }

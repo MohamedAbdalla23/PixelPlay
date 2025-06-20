@@ -1,11 +1,11 @@
 ﻿@model GamesIndexViewModel
 @{
     ViewData["Title"] = "Home Page";
+    var categories = Model.Categories!.ToList();
 }
 
 <div>
-    <h1 class="display-4 text-center">Welcome</h1>
-    @* <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p> *@
+    <h1 class="display-4 text-center">Welcome</h1>    
     <hr />
 
     <h3> 
@@ -40,7 +40,7 @@
     </div>
 
     <div class="d-flex justify-content-center my-3">
-        <a asp-controller="Games" asp-action="Index" class="btn btn-primary">
+        <a asp-controller="Games" asp-action="Index" asp-area="User" class="btn btn-primary">
             Browse All Games <i class="bi bi-arrow-right"></i>
         </a>
     </div>
@@ -48,7 +48,7 @@
     <hr />
 
 
-    <h2><a href="#">Action</a></h2>                         <!--Action Section-->
+    <h2>Action</h2>                         <!--Action Section-->
     <div class="row mt-3">
         @foreach (var item in Model.ActionGames!)
         {
@@ -61,7 +61,7 @@
 
     <!-- Browse All Games Button -->
     <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" class="btn btn-primary btn-lg browse-all-btn">
+        <a asp-controller="Games" asp-action="Index" asp-area="User" asp-route-category="@categories.FirstOrDefault(x => x.Name == "Action")!.Id" class="btn btn-primary btn-lg browse-all-btn">
             Browse All Action Games <i class="bi bi-arrow-right"></i>
         </a>
     </div>
@@ -69,11 +69,11 @@
     <hr />    
 
 
-    <h2> <a href="#">Adventure</a></h2>                     <!--Adventure Section-->
+    <h2> Adventure</h2>                     <!--Adventure Section-->
     <div class="row mt-3">
         @foreach (var item in Model.AdventureGames!)
         {
-            if (item.GameCategories.Any(x => x.CategoryId == 2))
+            if (item.GameCategories.Any(x => x.CategoryId == @categories.FirstOrDefault(x => x.Name == "Adventure")!.Id))
             {
                 @await Html.PartialAsync("_ActionGameCard", item)
             }
@@ -81,7 +81,7 @@
     </div>
 
     <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" class="btn btn-primary btn-lg browse-all-btn">
+        <a asp-controller="Games" asp-action="Index" asp-area="User" asp-route-category="@categories.FirstOrDefault(x => x.Name == "Adventure")!.Id" class="btn btn-primary btn-lg browse-all-btn">
             Browse All Adventure Games <i class="bi bi-arrow-right"></i>
         </a>
     </div>
@@ -89,7 +89,7 @@
     <hr />
 
 
-    <h2> <a href="#">Arcade</a></h2>                     <!--Arcade Section-->
+    <h2>Arcade</h2>                     <!--Arcade Section-->
     <div class="row mt-3">
         @foreach (var item in Model.ArcadeGames!)
         {
@@ -101,7 +101,7 @@
     </div>
 
     <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" class="btn btn-primary btn-lg browse-all-btn">
+        <a asp-controller="Games" asp-action="Index" asp-area="User" asp-route-category="@categories.FirstOrDefault(x => x.Name == "Arcade")!.Id" class="btn btn-primary btn-lg browse-all-btn">
             Browse All Arcade Games <i class="bi bi-arrow-right"></i>
         </a>
     </div>
@@ -109,7 +109,7 @@
     <hr />
     
 
-    <h2> <a href="#">Horror</a></h2>                     <!--Horror Section-->
+    <h2> Horror</h2>                     <!--Horror Section-->
     <div class="row mt-3">
         @foreach (var item in Model.HorrorGames!)
         {
@@ -121,7 +121,7 @@
     </div>
 
     <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" class="btn btn-primary btn-lg browse-all-btn">
+        <a asp-controller="Games" asp-action="Index" asp-area="User" asp-route-category="@categories.FirstOrDefault(x => x.Name == "Horror")!.Id" class="btn btn-primary btn-lg browse-all-btn">
             Browse All Horror Games <i class="bi bi-arrow-right"></i>
         </a>
     </div>
@@ -129,7 +129,7 @@
     <hr />
     
 
-    <h2> <a href="#">Fighting</a></h2>                     <!--Fighting Section-->
+    <h2> Fighting</h2>                     <!--Fighting Section-->
     <div class="row mt-3">
         @foreach (var item in Model.FightingGames!)
         {
@@ -141,7 +141,7 @@
     </div>
 
     <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" class="btn btn-primary btn-lg browse-all-btn">
+        <a asp-controller="Games" asp-action="Index" asp-area="User" asp-route-category="@categories.FirstOrDefault(x => x.Name == "Fighting")!.Id" class="btn btn-primary btn-lg browse-all-btn">
             Browse All Fighting Games <i class="bi bi-arrow-right"></i>
         </a>
     </div>
@@ -149,7 +149,7 @@
     <hr />
     
     
-    <h2> <a href="#">Story</a></h2>                     <!--Story Section-->
+    <h2>Story</h2>                     <!--Story Section-->
     <div class="row mt-3">
         @foreach (var item in Model.StoryGames!)
         {
@@ -161,12 +161,12 @@
     </div>
 
     <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" class="btn btn-primary btn-lg browse-all-btn">
+        <a asp-controller="Games" asp-action="Index" asp-area="User" asp-route-category="@categories.FirstOrDefault(x => x.Name == "Story")!.Id" class="btn btn-primary btn-lg browse-all-btn">
             Browse All Story Games <i class="bi bi-arrow-right"></i>
         </a>
     </div>
 
-    <hr /><h2> <a href="#">Shooting</a></h2>                     <!--Shooting Section-->
+    <hr /><h2>Shooting</h2>                     <!--Shooting Section-->
     <div class="row mt-3">
         @foreach (var item in Model.ShootingGames!)
         {
@@ -178,7 +178,7 @@
     </div>
 
     <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" class="btn btn-primary btn-lg browse-all-btn">
+        <a asp-controller="Games" asp-action="Index" asp-area="User" asp-route-category="@categories.FirstOrDefault(x => x.Name == "Shooting")!.Id" class="btn btn-primary btn-lg browse-all-btn">
             Browse All Shooting Games <i class="bi bi-arrow-right"></i>
         </a>
     </div>
@@ -186,7 +186,7 @@
     <hr />
     
     
-    <h2> <a href="#">Sport</a></h2>                     <!--Sport Section-->
+    <h2> Sport</h2>                     <!--Sport Section-->
     <div class="row mt-3">
         @foreach (var item in Model.SportGames!)
         {
@@ -198,7 +198,7 @@
     </div>
 
     <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" class="btn btn-primary btn-lg browse-all-btn">
+        <a asp-controller="Games" asp-action="Index" asp-area="User" asp-route-category="@categories.FirstOrDefault(x => x.Name == "Sport")!.Id" class="btn btn-primary btn-lg browse-all-btn">
             Browse All Sport Games <i class="bi bi-arrow-right"></i>
         </a>
     </div>
@@ -206,7 +206,7 @@
     <hr />
     
     
-    <h2> <a href="#">Survival</a></h2>                     <!--Survival Section-->
+    <h2> Survival</h2>                     <!--Survival Section-->
     <div class="row mt-3">
         @foreach (var item in Model.SurvivalGames!)
         {
@@ -218,7 +218,7 @@
     </div>
 
     <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" class="btn btn-primary btn-lg browse-all-btn">
+        <a asp-controller="Games" asp-action="Index" asp-area="User" asp-route-category="@categories.FirstOrDefault(x => x.Name == "Survival")!.Id" class="btn btn-primary btn-lg browse-all-btn">
             Browse All Survival Games <i class="bi bi-arrow-right"></i>
         </a>
     </div>
@@ -226,7 +226,7 @@
     <hr />
     
     
-    <h2> <a href="#">Drama</a></h2>                     <!--Drama Section-->
+    <h2> Drama</h2>                     <!--Drama Section-->
     <div class="row mt-3">
         @foreach (var item in Model.DramaGames!)
         {
@@ -238,7 +238,7 @@
     </div>
 
     <div class="d-flex justify-content-center mt-4">
-        <a asp-controller="Games" asp-action="Index" class="btn btn-primary btn-lg browse-all-btn">
+        <a asp-controller="Games" asp-action="Index" asp-area="User"asp-route-category="@categories.FirstOrDefault(x => x.Name == "Drama")!.Id" class="btn btn-primary btn-lg browse-all-btn">
             Browse All Drama Games <i class="bi bi-arrow-right"></i>
         </a>
     </div>

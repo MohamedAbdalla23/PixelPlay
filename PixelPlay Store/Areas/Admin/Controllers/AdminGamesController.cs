@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PixelPlay.Repositories.ReposInterface;
 
-namespace PixelPlay.Controllers
+namespace PixelPlay.Areas.Admin.Controllers
 {
-    public class GamesController : Controller
+    [Area("Admin")]
+    public class AdminGamesController : Controller
     {
         private readonly IGameRepo gamesrepo;
         private readonly IGameForm gameformrepo;
         private readonly ICategoriesRepo categoriesrepo;
         private readonly IDevicesRepo devicesrepo;
-        public GamesController(IGameRepo gameRepo, IGameForm gameForm, ICategoriesRepo categoriesRepo, IDevicesRepo devicesRepo)
+        public AdminGamesController(IGameRepo gameRepo, IGameForm gameForm, ICategoriesRepo categoriesRepo, IDevicesRepo devicesRepo)
         {
             gamesrepo = gameRepo;
             gameformrepo = gameForm;

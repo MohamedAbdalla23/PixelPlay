@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using PixelPlay.Repositories.ReposInterface;
 using PixelPlay_Store.Models;
 using System.Diagnostics;
 
@@ -8,11 +9,13 @@ namespace PixelPlay_Store.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IGameRepo gamesrepo;
+        private readonly ICategoriesRepo categoriesrepo;
 
-        public HomeController(ILogger<HomeController> logger, IGameRepo gamesRepo)
+        public HomeController(ILogger<HomeController> logger, IGameRepo gamesRepo, ICategoriesRepo categoriesRepo)
         {
             gamesrepo = gamesRepo;
             _logger = logger;
+            categoriesrepo = categoriesRepo;
         }
 
         [HttpGet]
@@ -21,6 +24,8 @@ namespace PixelPlay_Store.Controllers
             var games = await gamesrepo.GetAll().Take(8).ToListAsync();
 
             var game = await gamesrepo.GetAll().ToListAsync();
+
+            var categories = await categoriesrepo.GetCategory().ToListAsync();
 
             //Get all Action Games separately
             var actionGames = game
@@ -85,7 +90,8 @@ namespace PixelPlay_Store.Controllers
                 ShootingGames = shootingGames,
                 SportGames = sportGames,
                 SurvivalGames = survivalGames,
-                DramaGames = dramaGames
+                DramaGames = dramaGames,
+                Categories = categories             //*************
             };
 
             return View(viewModel);

@@ -1,0 +1,64 @@
+﻿@model IEnumerable<DeviceGameCountViewModel>
+
+@{
+    ViewData["Title"] = "Devices";
+}
+
+<h1>
+    <i class="bi bi-bookmarks"></i>
+    Devices
+</h1>
+
+<a asp-action="Create" class="btn btn-primary">
+    <i class="bi bi-bookmark-plus"></i>
+    Add New Device
+</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th class="w-auto">ID</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Icon)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th class="w-25">
+                @Html.DisplayNameFor(model => model.NoGameCount)
+            </th>
+            <th class="w-25">
+                Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td class="w-auto">
+                @item.Id
+            </td>
+            <td>
+                <i class="@Html.DisplayFor(modelItem => item.Icon)"></i>               
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td class="w-auto">
+                @item.NoGameCount
+            </td>
+            <td>
+                <a asp-action="Edit" asp-area="AdminDevices" asp-controller="AdminDecives" class="btn btn-sm btn-dark rounded-3 me-1" asp-route-id="@item?.Id">
+                    <i class="bi bi-pencil"></i> Edit
+                </a>                                
+                <a href="javascript:;" class="btn btn-sm btn-danger rounded-3 js-dev-delete" data-id="@item!.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@section Scripts
+{
+    <script src="~/js/device-delete.js" asp-append-version="true"></script>
+}
