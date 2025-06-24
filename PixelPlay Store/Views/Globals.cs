@@ -3,6 +3,7 @@ global using Microsoft.EntityFrameworkCore;
 global using PixelPlay.Data;
 global using PixelPlay.Models;
 global using PixelPlay.Repositories.Repos;
+global using Microsoft.AspNetCore.Identity;
 global using PixelPlay.Repositories.ServicesInterface;
 global using PixelPlay.Settings;
 global using PixelPlay.Validations;

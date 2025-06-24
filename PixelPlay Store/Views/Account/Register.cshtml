@@ -1,0 +1,65 @@
+﻿@model PixelPlay.ViewModel.RegisterFormViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+
+<div class="row ms-xl-5 me-xl-5">
+    <div class="col-md-4 me-auto mb-xl-5">
+        <h1>Register</h1>
+        <form asp-action="Register">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group mb-2">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" />
+                @* <span asp-validation-for="UserName" class="text-danger"></span> *@
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                @* <span asp-validation-for="Email" class="text-danger"></span> *@
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                @* <span asp-validation-for="Password" class="text-danger"></span> *@
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="ConfrmPass" class="control-label"></label>
+                <input asp-for="ConfrmPass" class="form-control" />
+                @* <span asp-validation-for="ConfrmPass" class="text-danger"></span> *@
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Phone" class="control-label"></label>
+                <input asp-for="Phone" class="form-control" />
+                @* <span asp-validation-for="Phone" class="text-danger"></span> *@
+            </div>
+            <div class="form-group mb-2">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                @* <span asp-validation-for="Address" class="text-danger"></span> *@
+            </div>
+            <div class="form-group">
+                <input type="submit" value="REGISTER" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="col-md-7 d-flex justify-content-center align-items-center border-start mb-xl-5">
+        <div class="text-center d-flex flex-column align-items-center gap-3">
+            <h2 class="mb-lg-4">ALREADY HAVE AN ACCOUNT?</h2>
+            <div class="mb-lg-4">Login to your account</div>
+            <div>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-primary">LOGIN</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* <div>
+    <a asp-action="Index">Back to List</a>
+</div> *@
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

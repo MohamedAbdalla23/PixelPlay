@@ -11,6 +11,16 @@ var ConnectionString = builder.Configuration.GetConnectionString("cs")
 
 builder.Services.AddDbContext<MyDbContext>(options => options.UseSqlServer(ConnectionString));
 
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.User.RequireUniqueEmail = true;
+})
+.AddEntityFrameworkStores<MyDbContext>()
+.AddDefaultTokenProviders();
+
 builder.Services.AddScoped<IGameRepo, GamesRepo>();
 builder.Services.AddScoped<IGameForm, GameForm>();
 builder.Services.AddScoped<ICategoriesRepo, CategoriesRepo>();
@@ -30,6 +40,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();

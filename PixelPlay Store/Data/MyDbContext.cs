@@ -1,11 +1,12 @@
-﻿namespace PixelPlay.Data
-{
-    public sealed class MyDbContext : DbContext
-    {
-        public MyDbContext() : base()
-        {
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using PixelPlay.ViewModel;
 
-        }
+namespace PixelPlay.Data
+{
+    public class MyDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int>
+    {
+        
 
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
         {
@@ -18,6 +19,7 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Categories>().HasData(
             [
                 new Categories {Id=1, Name="Action" },
@@ -46,10 +48,14 @@
         }
 
         public DbSet<Games> Games { get; set; }
+        public DbSet<Orders> Orders { get; set; }
         public DbSet<Devices> Devices { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Categories> Categories { get; set; }
         public DbSet<GameDevices> GameDevices { get; set; }
         public DbSet<GameCategories> GameCategories { get; set; }
-
+        public DbSet<PixelPlay.ViewModel.RegisterFormViewModel> RegisterFormViewModel { get; set; } = default!;
+        public DbSet<PixelPlay.ViewModel.LoginFormViewModel> LoginFormViewModel { get; set; } = default!;
+       
     }
 }
