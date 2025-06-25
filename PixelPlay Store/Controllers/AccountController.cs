@@ -17,6 +17,10 @@ namespace PixelPlay.Controllers
         [HttpGet]
         public IActionResult Register()
         {
+            if (User.Identity!.IsAuthenticated)
+            {
+                return RedirectToAction(nameof(Index), "Home");
+            }
             return View();
         }
 
@@ -39,18 +43,21 @@ namespace PixelPlay.Controllers
 
             //save to db
             var result = await usermanager.CreateAsync(user, model.Password!);
-            
+
             //cookie
             if (result.Succeeded)
             {
+                // Assign default role
+                await usermanager.AddToRoleAsync(user, "User");
+
                 await signinmanager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction(nameof(Index), "Home");
             }
             foreach (var item in result.Errors)
             {
                 ModelState.AddModelError("", item.Description);
             }
-               
+            
             return View(model);
         }
 
@@ -58,9 +65,13 @@ namespace PixelPlay.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            if (User.Identity!.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home"); // or dashboard
+            }
             return View();
-        }
-
+        }                                                                                                                                                                                            
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginFormViewModel model)
@@ -72,26 +83,32 @@ namespace PixelPlay.Controllers
             }
 
             //check found
-            var user = await usermanager.FindByNameAsync(model.LoginInput!) 
-                    ?? await usermanager.FindByEmailAsync(model.LoginInput!);
+            var user = await usermanager.FindByNameAsync(model.LoginInput!)
+                ?? await usermanager.FindByEmailAsync(model.LoginInput!);
+
             if (user == null)
             {
                 ModelState.AddModelError(string.Empty, "User cannot be found");
                 return View(model);
             }
+
             var found = await signinmanager.CheckPasswordSignInAsync(user, model.Password!, false);
 
-            //create cookie
             if (found.Succeeded)
             {
+                //create cookie
+                // Optional: clear previous session
+                await signinmanager.SignOutAsync();
+
                 await signinmanager.SignInAsync(user, model.RememberMe);
                 return RedirectToAction("Index", "Home");
             }
+
             ModelState.AddModelError(string.Empty, "Invalid Username or Password");
-            return View();
+            return View(model);
         }
 
-        
+
         public async Task<ActionResult> Logout()
         {
             await signinmanager.SignOutAsync();

@@ -1,15 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using PixelPlay.Data;
-using PixelPlay.Models;
-using PixelPlay.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PixelPlay.Controllers
 {
@@ -216,7 +206,7 @@ namespace PixelPlay.Controllers
             var currentRole = currentRoles.FirstOrDefault();
 
             // Find the role by exact name
-            var matchedRole = await rolemanager.FindByNameAsync(model.SelectedRole);
+            var matchedRole = await rolemanager.FindByNameAsync(model.SelectedRole!);
             if (matchedRole == null)
             {
                 ModelState.AddModelError("SelectedRole", $"Role '{model.SelectedRole}' does not exist.");
@@ -235,7 +225,7 @@ namespace PixelPlay.Controllers
                 if (currentRole != null)
                     await usermanager.RemoveFromRoleAsync(user, currentRole);
 
-                await usermanager.AddToRoleAsync(user, matchedRole.Name);
+                await usermanager.AddToRoleAsync(user, matchedRole.Name!);
             }
 
             return RedirectToAction(nameof(Index));
@@ -278,16 +268,7 @@ namespace PixelPlay.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
-        //public IActionResult Dashboard()
-        //{
-        //    //if (User.Identity!.IsAuthenticated)
-        //    //{
-        //    //    return View();
-        //    //}
-        //    //return Unauthorized();
-        //    return View();
-        //}
+        
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Dashboard()
         {
